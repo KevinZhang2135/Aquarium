@@ -2,31 +2,20 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: clang++ build active file",
-            "command": "/usr/bin/clang++",
+            "label": "C/C++: clang build active file",
+            "command": "/usr/bin/clang",
             "args": [
-                "-std=c++17",
-                "-fdiagnostics-color=always",
-                "-Wall",
+                "-fcolor-diagnostics",
+                "-fansi-escape-codes",
                 "-g",
-                "-I${workspaceFolder}/include",
-                "-L${workspaceFolder}/lib",
-                "${workspaceFolder}/src/glad.c",
-                "${workspaceFolder}/src/*.cpp",
-                "${workspaceFolder}/lib/libglfw.3.4.dylib",
+                "${file}",
+                "-I",
+                "/opt/homebrew/Cellar/sdl2/2.30.5/include",
+                "-L",
+                "/opt/homebrew/Cellar/sdl2/2.30.5/lib",
+                "-lSDL2",
                 "-o",
-                "${workspaceFolder}/build/main.exe",
-                "-framework",
-                "OpenGL",
-                "-framework",
-                "Cocoa",
-                "-framework",
-                "IOKit",
-                "-framework",
-                "CoreVideo",
-                "-framework",
-                "CoreFoundation",
-                "-Wno-deprecated"
+                "${workspaceFolder}/build/main"
             ],
             "options": {
                 "cwd": "${fileDirname}"
