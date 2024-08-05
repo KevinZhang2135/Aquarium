@@ -1,23 +1,23 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
+#include "screen.h"
+
+using namespace std;
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
-int main(int argc, char* args[]) 
+Screen *screen = nullptr;
+int main(int argc, char *args[])
 {
-    
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window *window = SDL_CreateWindow(
-        "Aquarium", 
-        SDL_WINDOWPOS_UNDEFINED, 
-        SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
-        SDL_WINDOW_SHOWN
-    );
 
+    screen = new Screen(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+    while (screen->Running()) {
+        screen->HandleEvents();
+        screen->Update();
+        screen->Render();
+    }
+
+    screen->Clean();
+    delete screen;
     return 0;
-    
 }
