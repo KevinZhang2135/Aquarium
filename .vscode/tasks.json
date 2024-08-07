@@ -2,16 +2,16 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: clang build active file",
-            "command": "/usr/bin/clang",
+            "label": "C/C++: clang++ build active file",
+            "command": "/usr/bin/clang++",
             "args": [
                 "-fcolor-diagnostics",
                 "-fansi-escape-codes",
                 "-g",
-                "${file}",
+                "${fileDirname}/*.cpp",
                 "-I",
                 "/opt/homebrew/Cellar/sdl2/2.30.6/include",
-                "-I",
+                "-I", 
                 "${workspaceFolder}/include",
                 "-L",
                 "/opt/homebrew/Cellar/sdl2/2.30.6/lib",
