@@ -10,9 +10,11 @@
                 "-g",
                 "${file}",
                 "-I",
-                "/opt/homebrew/Cellar/sdl2/2.30.5/include",
+                "/opt/homebrew/Cellar/sdl2/2.30.6/include",
+                "-I",
+                "${workspaceFolder}/include",
                 "-L",
-                "/opt/homebrew/Cellar/sdl2/2.30.5/lib",
+                "/opt/homebrew/Cellar/sdl2/2.30.6/lib",
                 "-lSDL2",
                 "-o",
                 "${workspaceFolder}/build/main"

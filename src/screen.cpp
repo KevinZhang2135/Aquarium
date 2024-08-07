@@ -1,6 +1,6 @@
 #include "screen.h"
 
-Screen::Screen(int width, int height, bool full_screen = false)
+Screen::Screen(int width, int height, bool full_screen)
 {
     int flags = (full_screen) ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
     isRunning = SDL_Init(SDL_INIT_VIDEO) == 0;
