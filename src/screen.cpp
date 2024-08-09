@@ -18,6 +18,8 @@ Screen::Screen(int width, int height, bool full_screen)
         renderer = SDL_CreateRenderer(window, -1, 0);
         (renderer) && SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     }
+
+    
 }
 
 bool Screen::Running() {
@@ -44,6 +46,10 @@ void Screen::HandleEvents()
 void Screen::Render()
 {
     SDL_RenderClear(renderer);
+    for (Fish *fish : fishes) {
+        
+    }
+
     SDL_RenderPresent(renderer);
 }
 
