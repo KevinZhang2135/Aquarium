@@ -16,10 +16,10 @@ class Anchor {
 
 class Head : public Anchor {
     public:
-        void Move(Vector2D point) override;
+        void Move(Vector2D point);
 };
 
 class Tail : public Anchor {
     public:
-        void Move(Vector2D point) override;
+        void Move(Vector2D point);
 };

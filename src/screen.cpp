@@ -19,7 +19,22 @@ Screen::Screen(int width, int height, bool full_screen)
         (renderer) && SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     }
 
-    
+    // Generates fish
+    for (int i = 0; i < NUM_FISHES; i++) {
+        Fish *fish = new Fish();
+        fishes[i] = fish;
+    }
+}
+
+Screen::~Screen()
+{
+    for (int i = 0; i < NUM_FISHES; i++) {
+        delete fishes[i];
+    }
+
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
 }
 
 bool Screen::Running() {
@@ -46,8 +61,12 @@ void Screen::HandleEvents()
 void Screen::Render()
 {
     SDL_RenderClear(renderer);
+    int i = 0;
     for (Fish *fish : fishes) {
-        
+        bool notNull = fish == NULL;
+        std::cout << "Fish "<< i << ": ";
+        std::cout << fish << std::endl;
+        i++;
     }
 
     SDL_RenderPresent(renderer);
@@ -58,10 +77,4 @@ void Screen::Update()
     SDL_UpdateWindowSurface(window);
 }
 
-// Deallocates resources used
-void Screen::Clean()
-{
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-}
+
