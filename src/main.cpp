@@ -1,5 +1,6 @@
 #include <iostream>
 #include "screen.h"
+#include "vector_math.h"
 #include "fish.h"
 
 #define SCREEN_WIDTH 800
@@ -24,8 +25,8 @@ void run()
 
 void test()
 {
-    Fish fish;
-    cout << fish.num_segments << endl;
+    Fish *fish = new Fish({Vector2D(2, 3)}, M_PI_4);
+    delete fish;
 }
 
 int main(int argc, char *args[])

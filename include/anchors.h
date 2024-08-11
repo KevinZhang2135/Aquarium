@@ -1,25 +1,27 @@
 #pragma once
+#include <iostream>
 #include "vector_math.h"
 
 class Anchor {
     public:
+        float dist_const;
         Vector2D position;
         Anchor *next; // the next anchor of a chain
-        Anchor *prev; // the previous anchor of a chain
 
         Anchor();
-        virtual void Move(Vector2D point);
-
-    protected:
-        float dist_const;
+        Anchor(Vector2D point);
+        virtual void MoveTo(Vector2D point);
+        
 };
 
 class Head : public Anchor {
     public:
-        void Move(Vector2D point);
+        Head();
+        Head(Vector2D point);
+        void MoveTo(Vector2D point) override;
 };
 
 class Tail : public Anchor {
     public:
-        void Move(Vector2D point);
+        void MoveTo(Vector2D point) override;
 };

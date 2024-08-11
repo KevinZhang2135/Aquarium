@@ -16,11 +16,11 @@ Screen::Screen(int width, int height, bool full_screen)
             flags);
 
         renderer = SDL_CreateRenderer(window, -1, 0);
-        (renderer) && SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     }
 
     // Generates fish
-    for (int i = 0; i < NUM_FISHES; i++) {
+    for (int i = 0; i < NUM_FISHES; i++)
+    {
         Fish *fish = new Fish();
         fishes[i] = fish;
     }
@@ -28,7 +28,8 @@ Screen::Screen(int width, int height, bool full_screen)
 
 Screen::~Screen()
 {
-    for (int i = 0; i < NUM_FISHES; i++) {
+    for (int i = 0; i < NUM_FISHES; i++)
+    {
         delete fishes[i];
     }
 
@@ -37,7 +38,8 @@ Screen::~Screen()
     SDL_Quit();
 }
 
-bool Screen::Running() {
+bool Screen::Running()
+{
     return isRunning;
 }
 
@@ -57,16 +59,60 @@ void Screen::HandleEvents()
     }
 }
 
+// Draws a circle using the midpoint circle algorithm
+void DrawCircle(SDL_Renderer *renderer, float center_x, float center_y, float radius)
+{
+    const float diameter = radius * 2;
+
+    float x = radius - 1;
+    float y = 0;
+    float dx = 1;
+    float dy = 1;
+    float error = dx - diameter;
+
+    // Stops when first octant has been drawn
+    while (x >= y)
+    {
+        //  Simulataneously draws the other octants based on reflections
+        SDL_RenderDrawPointF(renderer, center_x + x, center_y - y);
+        SDL_RenderDrawPointF(renderer, center_x + x, center_y + y);
+
+        SDL_RenderDrawPointF(renderer, center_x - x, center_y - y);
+        SDL_RenderDrawPointF(renderer, center_x - x, center_y + y);
+
+        SDL_RenderDrawPointF(renderer, center_x + y, center_y - x);
+        SDL_RenderDrawPointF(renderer, center_x + y, center_y + x);
+
+        SDL_RenderDrawPointF(renderer, center_x - y, center_y - x);
+        SDL_RenderDrawPointF(renderer, center_x - y, center_y + x);
+
+        if (error <= 0)
+        {
+            y++;
+            error += dy;
+            dy += 2;
+        }
+
+        if (error > 0)
+        {
+            x--;
+            dx += 2;
+            error += dx - diameter;
+        }
+    }
+}
+
 // Clears and redraws screen
 void Screen::Render()
 {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
-    int i = 0;
-    for (Fish *fish : fishes) {
-        bool notNull = fish == NULL;
-        std::cout << "Fish "<< i << ": ";
-        std::cout << fish << std::endl;
-        i++;
+    for (Fish *fish : fishes)
+    {   
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        for (Vector2D point : (*fish).GetPoints()) {
+            DrawCircle(renderer, point.x, point.y, 20);
+        }
     }
 
     SDL_RenderPresent(renderer);
@@ -74,7 +120,12 @@ void Screen::Render()
 
 void Screen::Update()
 {
+    for (Fish *fish : fishes)
+    {
+        fish->MoveTo(400, 400);
+        // std::cout << fish->position.x << ", ";
+        // std::cout << fish->position.y << std::endl;
+    }
+
     SDL_UpdateWindowSurface(window);
 }
-
-

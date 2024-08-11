@@ -12,7 +12,7 @@
                 "${fileDirname}/*.cpp",
                 "-I",
                 "/opt/homebrew/Cellar/sdl2/2.30.6/include",
-                "-I", 
+                "-I",
                 "${workspaceFolder}/include",
                 "-L",
                 "/opt/homebrew/Cellar/sdl2/2.30.6/lib",

@@ -1,13 +1,14 @@
 #pragma once
+#include <iostream>
 #include "SDL2/SDL.h"
 #include "fish.h"
-#include <iostream>
 
-#define NUM_FISHES 1
 
 class Screen
 {
 public:
+    static const int NUM_FISHES = 1;
+    
     Screen(int width, int height, bool full_screen = false);
     ~Screen();
     bool Running();

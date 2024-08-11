@@ -1,18 +1,70 @@
 #include "fish.h"
 
-Fish::Fish() : Fish(0.0f) {}
-Fish::Fish(float angle)
+Fish::Fish() : Fish(Vector2D(0, 0), 0.0f) {}
+Fish::Fish(Vector2D position, float angle)
 {
-    max_speed = 20;
     num_segments = 5;
+    max_speed = 1;
+
+    // Creates head
+    head = new Head(position);
+    head->dist_const = 0;
+
+    // Generates segments from head using angle
+    Anchor *segment = head;
+    for (int i = 1; i < num_segments; i++) {
+        (*segment).next = new Anchor();
+        segment = (*segment).next;
+
+        // Determines separation distance of each segment
+        Vector2D separation(segment->dist_const, 0);
+        position = position.Add(separation.RotateToAngle(angle));
+        (*segment).position = position;
+    }
+}
+
+Fish::~Fish() {
+    // Deletes the linked list of segments
+    Anchor *prev = head;
+    Anchor *temp = nullptr;
+
+    while (prev != nullptr) {
+        temp = (*prev).next;
+        delete prev;
+        
+        prev = temp;
+    }
+}
+
+std::vector<Vector2D> Fish::GetPoints() {
+    std::vector<Vector2D> points;
+    
+    // Fetches all the point of each segment
+    Anchor *prev = head;
+    Anchor *temp = nullptr;
+    
+    while (prev != nullptr) {
+        points.push_back((*prev).position);
+        prev = (*prev).next;
+    }
+
+    return points;
 }
 
 // Moves fish to point
-void Fish::Move(Vector2D point)
+void Fish::MoveTo(float x, float y)
 {
-    velocity = point.Subtract(position).ScaleToLength(max_speed);
+    MoveTo(Vector2D({x, y}));
+}
+
+// Moves fish to point
+void Fish::MoveTo(Vector2D point)
+{
+    velocity = point.Subtract((*head).position).ScaleToLength(max_speed);
+    (*head).MoveTo((*head).position.Add(velocity));
 }
 
 void Fish::Update()
 {
+
 }
