@@ -25,8 +25,6 @@ void run()
 
 void test()
 {
-    Fish *fish = new Fish({Vector2D(2, 3)}, M_PI_4);
-    delete fish;
 }
 
 int main(int argc, char *args[])

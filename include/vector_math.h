@@ -24,5 +24,9 @@ class Vector2D {
 
         /* Vector rotation */
         Vector2D RotateToAngle(float angle);
-      
+
+        /* Distance */
+        float DistanceTo(Vector2D point);
+        Vector2D MoveTowards(Vector2D point, float length);
+        
 };

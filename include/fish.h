@@ -7,7 +7,6 @@ class Fish
 {
 public:
     int num_segments;
-    Vector2D position;
     Vector2D velocity;
 
     Fish();

@@ -10,28 +10,27 @@ Anchor::Anchor(Vector2D point)
 }
 
 void Anchor::MoveTo(Vector2D point)
-{  
+{
     // Does not move if point is within distance constraint
-    Vector2D velocity = point.Subtract(position);
-    if (velocity.Magnitude() <= dist_const) {
+    if (position.DistanceTo(point) <= dist_const)
         return;
-    }
-        
-    velocity = velocity.ScaleToLength(dist_const);
+
+    Vector2D velocity = position.MoveTowards(point, dist_const);
     position = point.Subtract(velocity);
 
     // Moves the rest of the body using inverse kinematics
-    if (next != nullptr) 
-        (*next).MoveTo(position);
+    if (next != nullptr)
+        next->MoveTo(position);
 }
 
 Head::Head() : Anchor() {}
 Head::Head(Vector2D point) : Anchor(point) {}
 
-void Head::MoveTo(Vector2D point) {
+void Head::MoveTo(Vector2D point)
+{
     position = point;
 
     // Moves the rest of the body using inverse kinematics
     if (next != nullptr)
-        (*next).MoveTo(point);
+        next->MoveTo(point);
 }

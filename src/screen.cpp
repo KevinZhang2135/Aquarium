@@ -53,7 +53,7 @@ void Screen::HandleEvents()
     case SDL_QUIT:
         isRunning = false;
         break;
-
+        
     default:
         break;
     }
@@ -107,10 +107,11 @@ void Screen::Render()
 {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
+
     for (Fish *fish : fishes)
     {   
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        for (Vector2D point : (*fish).GetPoints()) {
+        for (Vector2D point : fish->GetPoints()) {
             DrawCircle(renderer, point.x, point.y, 20);
         }
     }
@@ -122,10 +123,9 @@ void Screen::Update()
 {
     for (Fish *fish : fishes)
     {
-        fish->MoveTo(400, 400);
-        // std::cout << fish->position.x << ", ";
-        // std::cout << fish->position.y << std::endl;
+        fish->MoveTo(mouse_x, mouse_y);
     }
 
+    SDL_GetMouseState(&mouse_x, &mouse_y);
     SDL_UpdateWindowSurface(window);
 }
