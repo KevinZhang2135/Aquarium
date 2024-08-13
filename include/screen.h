@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
-#include "SDL2/SDL.h"
+#include "SDL.h"
+#include "SDL2_gfxPrimitives.h"
 #include "fish.h"
 
 

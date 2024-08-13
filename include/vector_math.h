@@ -1,6 +1,6 @@
 #pragma once
 #include <stdexcept>
-#include "SDL2/SDL.h"
+#include "SDL.h"
 
 class Vector2D {
     public:

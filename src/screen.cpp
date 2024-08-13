@@ -53,52 +53,9 @@ void Screen::HandleEvents()
     case SDL_QUIT:
         isRunning = false;
         break;
-        
+
     default:
         break;
-    }
-}
-
-// Draws a circle using the midpoint circle algorithm
-void DrawCircle(SDL_Renderer *renderer, float center_x, float center_y, float radius)
-{
-    const float diameter = radius * 2;
-
-    float x = radius - 1;
-    float y = 0;
-    float dx = 1;
-    float dy = 1;
-    float error = dx - diameter;
-
-    // Stops when first octant has been drawn
-    while (x >= y)
-    {
-        //  Simulataneously draws the other octants based on reflections
-        SDL_RenderDrawPointF(renderer, center_x + x, center_y - y);
-        SDL_RenderDrawPointF(renderer, center_x + x, center_y + y);
-
-        SDL_RenderDrawPointF(renderer, center_x - x, center_y - y);
-        SDL_RenderDrawPointF(renderer, center_x - x, center_y + y);
-
-        SDL_RenderDrawPointF(renderer, center_x + y, center_y - x);
-        SDL_RenderDrawPointF(renderer, center_x + y, center_y + x);
-
-        SDL_RenderDrawPointF(renderer, center_x - y, center_y - x);
-        SDL_RenderDrawPointF(renderer, center_x - y, center_y + x);
-
-        if (error <= 0)
-        {
-            y++;
-            error += dy;
-            dy += 2;
-        }
-
-        if (error > 0)
-        {
-            x--;
-            dx += 2;
-            error += dx - diameter;
-        }
     }
 }
 
@@ -112,7 +69,8 @@ void Screen::Render()
     {   
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         for (Vector2D point : fish->GetPoints()) {
-            DrawCircle(renderer, point.x, point.y, 20);
+            // DrawCircle(renderer, point.x, point.y, 20);
+            filledCircleColor(renderer, point.x, point.y, 20, 0xff0000ff);
         }
     }
 
