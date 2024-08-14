@@ -4,7 +4,6 @@ Anchor::Anchor() : Anchor(Vector2D{0, 0}) {}
 
 Anchor::Anchor(Vector2D point)
 {
-    dist_const = 20;
     position = point;
     next = nullptr;
 }

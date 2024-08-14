@@ -3,17 +3,20 @@
 Fish::Fish() : Fish(Vector2D(0, 0), 0.0f) {}
 Fish::Fish(Vector2D position, float angle)
 {
-    num_segments = 30;
-    max_speed = 10;
-
     // Creates head
     head = new Head(position);
+    head->radius = GetAnchorRadiusAt(0);
 
     // Generates segments from head using angle
     Anchor *segment = head;
-    for (int i = 1; i < num_segments; i++) {
+
+    for (int i = 1; i < max_segments; i++)
+    {
         segment->next = new Anchor();
         segment = segment->next;
+
+        // Determines the radius of each segment
+        segment->radius = GetAnchorRadiusAt(i);
 
         // Determines separation distance of each segment
         Vector2D separation(segment->dist_const, 0);
@@ -22,28 +25,32 @@ Fish::Fish(Vector2D position, float angle)
     }
 }
 
-Fish::~Fish() {
+Fish::~Fish()
+{
     // Deletes the linked list of segments
     Anchor *prev = head;
     Anchor *temp = nullptr;
 
-    while (prev != nullptr) {
+    while (prev != nullptr)
+    {
         temp = prev->next;
         delete prev;
-        
+
         prev = temp;
     }
 }
 
 // Fetches all the point of each segment
-std::vector<Vector2D> Fish::GetPoints() {
-    std::vector<Vector2D> points;
-    
+std::vector<Anchor> Fish::GetAnchors()
+{
+    std::vector<Anchor> points;
+
     Anchor *prev = head;
     Anchor *temp = nullptr;
-    
+
     // Traverses the linked list for each point
-    while (prev != nullptr) {
+    while (prev != nullptr)
+    {
         points.push_back(prev->position);
         prev = prev->next;
     }
@@ -70,5 +77,23 @@ void Fish::MoveTo(Vector2D point)
 
 void Fish::Update()
 {
+}
 
+// Uses a continuous piecewise function to approximate the radius of a fish
+float Fish::GetAnchorRadiusAt(int segment_num)
+{
+    // x-value where the fish radius decreases at a decreasing rate
+    float tapering_x = (1 + sqrt(2)) / 2;
+
+    // x-value of the segment on the graph on the interval [0, 2]
+    float fish_pos_x = float(segment_num) / max_segments * 2;
+
+    // radius is approximated with a semi-circle before tapering and with a
+    // decreasing exponential after tapering
+    float fish_radius = radius_multiplier;
+    fish_radius *= (fish_pos_x <= tapering_x)
+                       ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
+                       : powf(M_E, -fish_pos_x + tapering_x);
+
+    return fish_radius;
 }

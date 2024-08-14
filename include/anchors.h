@@ -4,7 +4,9 @@
 
 class Anchor {
     public:
-        float dist_const;
+        float dist_const = 10;
+        float radius = 10;
+
         Vector2D position;
         Anchor *next; // the next anchor of a chain
 

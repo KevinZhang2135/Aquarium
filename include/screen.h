@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "SDL2_gfxPrimitives.h"
 #include "fish.h"
+#include "anchors.h"
 
 
 class Screen
@@ -14,8 +15,9 @@ public:
     Screen(int width, int height, bool full_screen = false);
     ~Screen();
     bool Running();
-
     void HandleEvents();
+
+    void DrawFish(Fish *fish);
     void Render();
     void Update();
     

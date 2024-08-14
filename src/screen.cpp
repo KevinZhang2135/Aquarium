@@ -59,19 +59,29 @@ void Screen::HandleEvents()
     }
 }
 
+void Screen::DrawFish(Fish *fish)
+{
+    Anchor *anchor = fish->head;
+    Anchor *temp = nullptr;
+
+    // Traverses the linked list for each anchor of the fish
+    while (anchor != nullptr)
+    {
+        Vector2D pos = anchor->position;
+        filledCircleRGBA(renderer, pos.x, pos.y, anchor->radius, 255, 255, 255, 255);
+        anchor = anchor->next;
+    }
+}
+
 // Clears and redraws screen
 void Screen::Render()
 {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
     for (Fish *fish : fishes)
-    {   
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        for (Vector2D point : fish->GetPoints()) {
-            // DrawCircle(renderer, point.x, point.y, 20);
-            filledCircleColor(renderer, point.x, point.y, 20, 0xff0000ff);
-        }
+    {
+        DrawFish(fish);
     }
 
     SDL_RenderPresent(renderer);
