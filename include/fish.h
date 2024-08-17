@@ -1,30 +1,30 @@
 #pragma once
 #include <iostream>
-#include <vector>
-#include "vector_math.h"
 #include "anchors.h"
+#include "vector_math.h"
 
 class Fish
 {
 public:
-    int max_segments = 8;
-
+    int max_segments;
     Vector2D velocity;
+
+    // Body segments
     Head *head;
+    Anchor *tail;
+    Sint16 fin_x[4], fin_y[4]; // uses cubic bezier curve
 
     Fish();
     Fish(Vector2D position, float angle);
     ~Fish();
 
-    std::vector<Anchor> GetAnchors();
     void MoveTo(float x, float y);
     void MoveTo(Vector2D point);
-    
     void Update();
 
 private:
-    float max_speed = 10;
-    float radius_multiplier = 10;
+    const float MAX_SPEED = 10;
+    const float RADIUS_SCALAR = 12;
 
-    float GetAnchorRadiusAt(int segment);
+    void SetAnchorRadius(Anchor *anchor, int anchor_index);
 };

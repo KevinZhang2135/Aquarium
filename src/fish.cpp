@@ -1,28 +1,31 @@
 #include "fish.h"
 
 Fish::Fish() : Fish(Vector2D(0, 0), 0.0f) {}
-Fish::Fish(Vector2D position, float angle)
+Fish::Fish(Vector2D position, float angle) 
+    : max_segments{12},
+    fin_x{0, 3, 4, 0}
 {
     // Creates head
-    head = new Head(position);
-    head->radius = GetAnchorRadiusAt(0);
+    head = new Head(position, angle);
+    SetAnchorRadius(head, 0);
 
     // Generates segments from head using angle
     Anchor *segment = head;
-
     for (int i = 1; i < max_segments; i++)
     {
         segment->next = new Anchor();
         segment = segment->next;
 
         // Determines the radius of each segment
-        segment->radius = GetAnchorRadiusAt(i);
+        SetAnchorRadius(segment, i);
 
         // Determines separation distance of each segment
-        Vector2D separation(segment->dist_const, 0);
+        Vector2D separation(segment->DIST_CONSTRAINT, 0);
         position = position.Add(separation.RotateToAngle(angle));
         segment->position = position;
     }
+
+    tail = segment;
 }
 
 Fish::~Fish()
@@ -40,24 +43,6 @@ Fish::~Fish()
     }
 }
 
-// Fetches all the point of each segment
-std::vector<Anchor> Fish::GetAnchors()
-{
-    std::vector<Anchor> points;
-
-    Anchor *prev = head;
-    Anchor *temp = nullptr;
-
-    // Traverses the linked list for each point
-    while (prev != nullptr)
-    {
-        points.push_back(prev->position);
-        prev = prev->next;
-    }
-
-    return points;
-}
-
 // Moves fish to point
 void Fish::MoveTo(float x, float y)
 {
@@ -68,11 +53,12 @@ void Fish::MoveTo(float x, float y)
 void Fish::MoveTo(Vector2D point)
 {
     // Does not move if point is within distance constraint
-    if (head->position.DistanceTo(point) <= max_speed)
+    if (head->position.DistanceTo(point) <= MAX_SPEED)
         return;
 
-    velocity = head->position.MoveTowards(point, max_speed);
+    velocity = head->position.MoveTowards(point, MAX_SPEED);
     head->MoveTo(head->position.Add(velocity));
+    
 }
 
 void Fish::Update()
@@ -80,20 +66,20 @@ void Fish::Update()
 }
 
 // Uses a continuous piecewise function to approximate the radius of a fish
-float Fish::GetAnchorRadiusAt(int segment_num)
+void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
 {
     // x-value where the fish radius decreases at a decreasing rate
     float tapering_x = (1 + sqrt(2)) / 2;
 
     // x-value of the segment on the graph on the interval [0, 2]
-    float fish_pos_x = float(segment_num) / max_segments * 2;
+    float fish_pos_x = float(anchor_index) / max_segments * 2;
 
     // radius is approximated with a semi-circle before tapering and with a
     // decreasing exponential after tapering
-    float fish_radius = radius_multiplier;
+    float fish_radius = RADIUS_SCALAR;
     fish_radius *= (fish_pos_x <= tapering_x)
                        ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
                        : powf(M_E, -fish_pos_x + tapering_x);
-
-    return fish_radius;
+    
+    anchor->radius = fish_radius;
 }

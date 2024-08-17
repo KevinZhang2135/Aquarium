@@ -4,14 +4,15 @@
 
 class Anchor {
     public:
-        float dist_const = 10;
-        float radius = 10;
+        static const int DIST_CONSTRAINT = 10;
+        float radius;
+        float angle;
 
         Vector2D position;
         Anchor *next; // the next anchor of a chain
 
         Anchor();
-        Anchor(Vector2D point);
+        Anchor(Vector2D point, float angle);
         virtual void MoveTo(Vector2D point);
         
 };
@@ -19,11 +20,6 @@ class Anchor {
 class Head : public Anchor {
     public:
         Head();
-        Head(Vector2D point);
-        void MoveTo(Vector2D point) override;
-};
-
-class Tail : public Anchor {
-    public:
+        Head(Vector2D point, float angle);
         void MoveTo(Vector2D point) override;
 };

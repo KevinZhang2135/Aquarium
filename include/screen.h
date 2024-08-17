@@ -1,10 +1,12 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include "SDL.h"
 #include "SDL2_gfxPrimitives.h"
 #include "fish.h"
 #include "anchors.h"
 
+using namespace std;
 
 class Screen
 {
@@ -17,10 +19,9 @@ public:
     bool Running();
     void HandleEvents();
 
-    void DrawFish(Fish *fish);
+    void DrawFish(const Fish *fish);
     void Render();
     void Update();
-    
 
 private:
     bool isRunning;

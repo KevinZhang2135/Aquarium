@@ -1,7 +1,7 @@
 #include "vector_math.h"
 
-Vector2D::Vector2D() : x(0), y(0) {}
-Vector2D::Vector2D(float x, float y) : x(x), y(y) {}
+Vector2D::Vector2D() : x{0}, y{0} {}
+Vector2D::Vector2D(float x, float y) : x{x}, y{y} {}
 
 // Returns the Euclidean length of the vector from the origin
 float Vector2D::Magnitude()

@@ -59,7 +59,7 @@ void Screen::HandleEvents()
     }
 }
 
-void Screen::DrawFish(Fish *fish)
+void Screen::DrawFish(const Fish *fish)
 {
     Anchor *anchor = fish->head;
     Anchor *temp = nullptr;
@@ -67,8 +67,16 @@ void Screen::DrawFish(Fish *fish)
     // Traverses the linked list for each anchor of the fish
     while (anchor != nullptr)
     {
-        Vector2D pos = anchor->position;
-        filledCircleRGBA(renderer, pos.x, pos.y, anchor->radius, 255, 255, 255, 255);
+        filledCircleRGBA(
+            renderer,
+            anchor->position.x,
+            anchor->position.y,
+            anchor->radius,
+            255,
+            255,
+            255,
+            255);
+
         anchor = anchor->next;
     }
 }
@@ -84,6 +92,7 @@ void Screen::Render()
         DrawFish(fish);
     }
 
+    // bezierRGBA(renderer, fin_x, fin_y, 3, 10, 255, 0, 0, 255);
     SDL_RenderPresent(renderer);
 }
 
