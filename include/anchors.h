@@ -4,7 +4,7 @@
 
 class Anchor {
     public:
-        static const int DIST_CONSTRAINT = 8;
+        const float DIST_CONSTRAINT = 4;
         float radius;
         float angle;
 
@@ -14,7 +14,8 @@ class Anchor {
         Anchor();
         Anchor(Vector2D point, float angle);
         virtual void MoveTo(Vector2D point);
-        
+
+    
 };
 
 class Head : public Anchor {

@@ -22,7 +22,7 @@ Screen::Screen(int width, int height, bool full_screen)
     }
 
     // Generates fish
-    for (int i = 0; i < NUM_FISHES; i++)
+    for (int i = 0; i < NUM_FISH; i++)
     {
         Vector2D position (Randint(0, width), Randint(0, height));
         Fish *fish = new Fish(position, 0.0f);
@@ -32,7 +32,7 @@ Screen::Screen(int width, int height, bool full_screen)
 
 Screen::~Screen()
 {
-    for (int i = 0; i < NUM_FISHES; i++)
+    for (int i = 0; i < NUM_FISH; i++)
     {
         delete fishes[i];
     }
@@ -74,7 +74,7 @@ void Screen::DrawFish(const Fish *fish)
     {
         // 0xAABBGGRR
         Uint32 color = 0xffab4700;
-        bool draw_fin = (i == fish->max_segments / 5) || (i == fish->max_segments * 5 / 7);
+        bool draw_fin = (i == fish->MAX_SEGMENTS / 5) || (i == fish->MAX_SEGMENTS * 5 / 7);
 
         // Draws body
         filledCircleColor(

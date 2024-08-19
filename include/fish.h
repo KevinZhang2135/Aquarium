@@ -6,9 +6,8 @@
 class Fish
 {
 public:
-    int max_segments;
+    const int MAX_SEGMENTS = 16;
     Vector2D velocity;
-    Sint16 fin_x[4], fin_y[4];
 
     // Body segments
     Head *head;
@@ -26,9 +25,8 @@ public:
     void Update();
 
 private:
-    const float MAX_SPEED = 10;
-    const float SCALE = 16;
+    const float SCALE = 8;    
+    const float MAX_SPEED = 2;
     
-
     void SetAnchorRadius(Anchor *anchor, int anchor_index);
 };

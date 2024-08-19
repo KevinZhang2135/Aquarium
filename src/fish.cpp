@@ -2,9 +2,6 @@
 
 Fish::Fish() : Fish(Vector2D(0, 0), 0.0f) {}
 Fish::Fish(Vector2D position, float angle)
-    : max_segments{16},
-      fin_x{0, 3, 4, 0},
-      fin_y{2, 0, 3, 5}
 {
     // Creates head
     head = new Head(position, angle);
@@ -12,7 +9,7 @@ Fish::Fish(Vector2D position, float angle)
 
     // Generates segments from head using angle
     Anchor *segment = head;
-    for (int i = 1; i < max_segments; i++)
+    for (int i = 1; i < MAX_SEGMENTS; i++)
     {
         segment->next = new Anchor();
         segment = segment->next;
@@ -21,18 +18,12 @@ Fish::Fish(Vector2D position, float angle)
         SetAnchorRadius(segment, i);
 
         // Determines separation distance of each segment
-        Vector2D separation(segment->DIST_CONSTRAINT, 0);
+        Vector2D separation(SCALE / 2, 0);
         position = position.Add(separation.RotateToAngle(angle));
         segment->position = position;
     }
 
     tail = segment;
-
-    for (int i = 0; i < 4; i++)
-    {
-        fin_x[i] = fin_x[i] * SCALE + 100;
-        fin_y[i] = fin_y[i] * -SCALE + 100;
-    }
 }
 
 // Deletes all segment anchors
@@ -79,7 +70,7 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
     float tapering_x = (1 + sqrt(2)) / 2;
 
     // x-value of the segment on the graph on the interval [0, 2]
-    float fish_pos_x = float(anchor_index) / max_segments * 2;
+    float fish_pos_x = float(anchor_index) / MAX_SEGMENTS * 2;
 
     // radius is approximated with a semi-circle before tapering and with a
     // decreasing exponential after tapering

@@ -12,7 +12,7 @@ using namespace std;
 class Screen
 {
 public:
-    static const int NUM_FISHES = 2;
+    static const int NUM_FISH = 1;
     int mouse_x, mouse_y;
 
     Screen(int width, int height, bool full_screen = false);
@@ -30,7 +30,7 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
 
-    Fish *fishes[NUM_FISHES];
+    Fish *fishes[NUM_FISH];
 };
 
 int Randint(int min, int max);
