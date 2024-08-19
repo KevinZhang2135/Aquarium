@@ -1,9 +1,10 @@
 #include "fish.h"
 
 Fish::Fish() : Fish(Vector2D(0, 0), 0.0f) {}
-Fish::Fish(Vector2D position, float angle) 
-    : max_segments{12},
-    fin_x{0, 3, 4, 0}
+Fish::Fish(Vector2D position, float angle)
+    : max_segments{16},
+      fin_x{0, 3, 4, 0},
+      fin_y{2, 0, 3, 5}
 {
     // Creates head
     head = new Head(position, angle);
@@ -26,6 +27,11 @@ Fish::Fish(Vector2D position, float angle)
     }
 
     tail = segment;
+    
+    for (int i = 0; i < 4; i++) {
+        fin_x[i] = fin_x[i] * SCALE + 100;
+        fin_y[i] = fin_y[i] * -SCALE + 100;
+    }
 }
 
 Fish::~Fish()
@@ -58,7 +64,6 @@ void Fish::MoveTo(Vector2D point)
 
     velocity = head->position.MoveTowards(point, MAX_SPEED);
     head->MoveTo(head->position.Add(velocity));
-    
 }
 
 void Fish::Update()
@@ -76,10 +81,10 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
 
     // radius is approximated with a semi-circle before tapering and with a
     // decreasing exponential after tapering
-    float fish_radius = RADIUS_SCALAR;
+    float fish_radius = SCALE;
     fish_radius *= (fish_pos_x <= tapering_x)
                        ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
                        : powf(M_E, -fish_pos_x + tapering_x);
-    
+
     anchor->radius = fish_radius;
 }

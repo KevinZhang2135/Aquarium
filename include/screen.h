@@ -20,6 +20,7 @@ public:
     void HandleEvents();
 
     void DrawFish(const Fish *fish);
+    void DrawFins(Anchor *anchor);
     void Render();
     void Update();
 

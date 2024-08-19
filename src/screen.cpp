@@ -65,19 +65,74 @@ void Screen::DrawFish(const Fish *fish)
     Anchor *temp = nullptr;
 
     // Traverses the linked list for each anchor of the fish
+    int i = 0;
     while (anchor != nullptr)
     {
-        filledCircleRGBA(
+        int anchor_index = fish->max_segments / 4;
+        bool draw_fin = i == anchor_index || i == anchor_index * 3;
+
+        // 0xAABBGGRR
+        Uint32 color = 0xffffffff;
+
+        // Draws body
+        circleColor(
             renderer,
             anchor->position.x,
             anchor->position.y,
             anchor->radius,
-            255,
-            255,
-            255,
-            255);
+            color);
+
+        if (draw_fin)
+            DrawFins(anchor);
 
         anchor = anchor->next;
+        i++;
+    }
+}
+
+void Screen::DrawFins(Anchor *anchor)
+{
+    Uint32 color = 0xff0000ff;
+
+    int fin_segments = 10;
+    float fin_angle = M_PI * 0.6f;
+    float fin_radius = anchor->radius * 0.7f;
+
+    // Pectoral fins
+    // for (int i = 1; i < fin_segments; i++)
+    // {
+    // Draws the left and right fins
+    // for (int j = -1; j <= 1; j += 2)
+    // {
+    //     Vector2D fin_position = anchor->position.MoveTowards(
+    //         anchor->angle + fin_angle * j,
+    //         fin_radius);
+
+    //     circleColor(
+    //         renderer,
+    //         fin_position.x,
+    //         fin_position.y,
+    //         fin_radius,
+    //         color);
+    // }
+    // }
+
+    // Switches between negative and positive angles
+    for (int sign = -1; sign <= 1; sign += 2)
+    {
+        for (int i = 1; i < fin_segments; i++)
+        {
+            Vector2D fin_position = anchor->position.MoveTowards(
+                anchor->angle + fin_angle * sign,
+                fin_radius * (1.0f - i / 10.0f));
+
+            circleColor(
+                renderer,
+                fin_position.x,
+                fin_position.y,
+                fin_radius * (1.0f - i / 10.0f),
+                color);
+        }
     }
 }
 
@@ -92,7 +147,6 @@ void Screen::Render()
         DrawFish(fish);
     }
 
-    // bezierRGBA(renderer, fin_x, fin_y, 3, 10, 255, 0, 0, 255);
     SDL_RenderPresent(renderer);
 }
 

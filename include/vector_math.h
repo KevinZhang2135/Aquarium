@@ -28,5 +28,6 @@ class Vector2D {
         /* Distance */
         float DistanceTo(Vector2D point);
         Vector2D MoveTowards(Vector2D point, float length);
+        Vector2D MoveTowards(float angle, float length);
         
 };
