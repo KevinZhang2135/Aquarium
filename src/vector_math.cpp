@@ -85,6 +85,7 @@ Vector2D Vector2D::MoveTowards(Vector2D point, float length) {
     return point.Subtract(*this).ScaleToLength(length);
 }
 
+// Returns a vector moved length towards the specified angle
 Vector2D Vector2D::MoveTowards(float angle, float length) {
     Vector2D displacement (length, 0);
     displacement = displacement.RotateToAngle(angle);

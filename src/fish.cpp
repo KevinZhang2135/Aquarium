@@ -27,19 +27,21 @@ Fish::Fish(Vector2D position, float angle)
     }
 
     tail = segment;
-    
-    for (int i = 0; i < 4; i++) {
+
+    for (int i = 0; i < 4; i++)
+    {
         fin_x[i] = fin_x[i] * SCALE + 100;
         fin_y[i] = fin_y[i] * -SCALE + 100;
     }
 }
 
+// Deletes all segment anchors
 Fish::~Fish()
 {
-    // Deletes the linked list of segments
     Anchor *prev = head;
     Anchor *temp = nullptr;
 
+    // Loops through each anchor and deletes it
     while (prev != nullptr)
     {
         temp = prev->next;
@@ -83,8 +85,8 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
     // decreasing exponential after tapering
     float fish_radius = SCALE;
     fish_radius *= (fish_pos_x <= tapering_x)
-                       ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
-                       : powf(M_E, -fish_pos_x + tapering_x);
+        ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
+        : powf(M_E, -fish_pos_x + tapering_x);
 
     anchor->radius = fish_radius;
 }

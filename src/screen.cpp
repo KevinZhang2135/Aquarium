@@ -2,6 +2,9 @@
 
 Screen::Screen(int width, int height, bool full_screen)
 {
+    // Seeds random number generator with current time
+    srand(time(NULL));
+
     int flags = (full_screen) ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
     isRunning = SDL_Init(SDL_INIT_VIDEO) == 0;
 
@@ -21,7 +24,8 @@ Screen::Screen(int width, int height, bool full_screen)
     // Generates fish
     for (int i = 0; i < NUM_FISHES; i++)
     {
-        Fish *fish = new Fish();
+        Vector2D position (Randint(0, width), Randint(0, height));
+        Fish *fish = new Fish(position, 0.0f);
         fishes[i] = fish;
     }
 }
@@ -68,23 +72,22 @@ void Screen::DrawFish(const Fish *fish)
     int i = 0;
     while (anchor != nullptr)
     {
-        int anchor_index = fish->max_segments / 4;
-        bool draw_fin = i == anchor_index || i == anchor_index * 3;
-
         // 0xAABBGGRR
-        Uint32 color = 0xffffffff;
+        Uint32 color = 0xffab4700;
+        bool draw_fin = (i == fish->max_segments / 5) || (i == fish->max_segments * 5 / 7);
 
         // Draws body
-        circleColor(
+        filledCircleColor(
             renderer,
             anchor->position.x,
             anchor->position.y,
             anchor->radius,
             color);
 
-        if (draw_fin)
+        if (draw_fin) {
             DrawFins(anchor);
-
+        }
+            
         anchor = anchor->next;
         i++;
     }
@@ -92,41 +95,23 @@ void Screen::DrawFish(const Fish *fish)
 
 void Screen::DrawFins(Anchor *anchor)
 {
-    Uint32 color = 0xff0000ff;
-
-    int fin_segments = 10;
-    float fin_angle = M_PI * 0.6f;
-    float fin_radius = anchor->radius * 0.7f;
+    Uint32 color = 0xffcc9066;
+    int fin_segments = 4;
+    float fin_angle = M_PI * 0.7f;
+    float fin_radius = anchor->radius * 0.6f;
 
     // Pectoral fins
-    // for (int i = 1; i < fin_segments; i++)
-    // {
-    // Draws the left and right fins
-    // for (int j = -1; j <= 1; j += 2)
-    // {
-    //     Vector2D fin_position = anchor->position.MoveTowards(
-    //         anchor->angle + fin_angle * j,
-    //         fin_radius);
-
-    //     circleColor(
-    //         renderer,
-    //         fin_position.x,
-    //         fin_position.y,
-    //         fin_radius,
-    //         color);
-    // }
-    // }
-
     // Switches between negative and positive angles
     for (int sign = -1; sign <= 1; sign += 2)
     {
-        for (int i = 1; i < fin_segments; i++)
+        // Draws a series of circles extending from the body at the fin angle
+        for (int i = 1; i <= fin_segments; i++)
         {
             Vector2D fin_position = anchor->position.MoveTowards(
                 anchor->angle + fin_angle * sign,
-                fin_radius * (1.0f - i / 10.0f));
+                fin_radius * (1.0f + i / 2.0f));
 
-            circleColor(
+            filledCircleColor(
                 renderer,
                 fin_position.x,
                 fin_position.y,
@@ -159,4 +144,8 @@ void Screen::Update()
 
     SDL_GetMouseState(&mouse_x, &mouse_y);
     SDL_UpdateWindowSurface(window);
+}
+
+int Randint(int min, int max) {
+    return rand() % (max - min + 1) + min;
 }
