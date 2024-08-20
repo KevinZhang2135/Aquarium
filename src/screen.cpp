@@ -26,17 +26,18 @@ Screen::Screen(int width, int height, bool full_screen)
     }
 
     // Generates optimization grid
-    // for (int x = 0; x < width / GRID_SIZE; x++) {
-    //     for (int y = 0; y < height / GRID_SIZE; y++) {
-
-    //     }
-    // }
+    for (int x = 0; x < width / GRID_SIZE; x++) {
+        for (int y = 0; y < height / GRID_SIZE; y++) {
+            grid[{Vector2D(x, y)}] = {vector<Fish>()};
+        }
+    }
 
     // Generates fish
     for (int i = 0; i < NUM_FISH; i++)
     {
         Vector2D position (Randint(0, width), Randint(0, height));
         float angle = M_PI * (Randint(0, 360) / 360.0f);
+        
         Fish *fish = new Fish(position, angle);
         fishes[i] = fish;
     }
@@ -167,13 +168,6 @@ void Screen::Update()
     SDL_GetMouseState(&mouse_x, &mouse_y);
     SDL_UpdateWindowSurface(window);
 }
-
-
-size_t hash<Vector2D>::operator()(const Vector2D &point) const
-{
-    return hash<int>{}(int(point.x)) ^ hash<int>{}(int(point.y) << 1);
-}
-
 
 int Randint(int min, int max) {
     return rand() % (max - min + 1) + min;

@@ -1,6 +1,10 @@
 #pragma once
+
+#include <unordered_map>
 #include <stdexcept>
 #include "SDL.h"
+
+using namespace std;
 
 class Vector2D {
     public:
@@ -31,5 +35,9 @@ class Vector2D {
         float DistanceTo(Vector2D point);
         Vector2D MoveTowards(Vector2D point, float length);
         Vector2D MoveTowards(float angle, float length);
-        
+};
+
+template <>
+struct hash<Vector2D> {
+    size_t operator()(const Vector2D &point) const;
 };
