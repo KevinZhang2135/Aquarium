@@ -3,6 +3,11 @@
 Vector2D::Vector2D() : x{0}, y{0} {}
 Vector2D::Vector2D(float x, float y) : x{x}, y{y} {}
 
+bool Vector2D::operator==(const Vector2D other) const
+{
+    return (this->x == other.x && this->y == other.y);
+}
+
 // Returns the Euclidean length of the vector from the origin
 float Vector2D::Magnitude()
 {
@@ -81,14 +86,18 @@ float Vector2D::DistanceTo(Vector2D point)
 }
 
 // Returns a vector of length moved towards the specified point
-Vector2D Vector2D::MoveTowards(Vector2D point, float length) {
+Vector2D Vector2D::MoveTowards(Vector2D point, float length)
+{
     return point.Subtract(*this).ScaleToLength(length);
 }
 
 // Returns a vector moved length towards the specified angle
-Vector2D Vector2D::MoveTowards(float angle, float length) {
-    Vector2D displacement (length, 0);
+Vector2D Vector2D::MoveTowards(float angle, float length)
+{
+    Vector2D displacement(length, 0);
     displacement = displacement.RotateToAngle(angle);
 
     return Add(displacement);
 }
+
+

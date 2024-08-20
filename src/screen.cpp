@@ -5,6 +5,10 @@ Screen::Screen(int width, int height, bool full_screen)
     // Seeds random number generator with current time
     srand(time(NULL));
 
+    // Creates SDL window and renderer
+    this->width = width;
+    this->height = height;
+
     int flags = (full_screen) ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
     isRunning = SDL_Init(SDL_INIT_VIDEO) == 0;
 
@@ -21,11 +25,19 @@ Screen::Screen(int width, int height, bool full_screen)
         renderer = SDL_CreateRenderer(window, -1, 0);
     }
 
+    // Generates optimization grid
+    // for (int x = 0; x < width / GRID_SIZE; x++) {
+    //     for (int y = 0; y < height / GRID_SIZE; y++) {
+
+    //     }
+    // }
+
     // Generates fish
     for (int i = 0; i < NUM_FISH; i++)
     {
         Vector2D position (Randint(0, width), Randint(0, height));
-        Fish *fish = new Fish(position, 0.0f);
+        float angle = M_PI * (Randint(0, 360) / 360.0f);
+        Fish *fish = new Fish(position, angle);
         fishes[i] = fish;
     }
 }
@@ -127,6 +139,16 @@ void Screen::Render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
+    // Draws optimization grid lines
+    for (int x = 0; x < width; x += GRID_SIZE) {
+        vlineColor(renderer, x, 0, height, 0xffffffff);
+    }
+
+    for (int y = 0; y < width; y += GRID_SIZE) {
+        hlineColor(renderer, 0, height, y, 0xffffffff);
+    }
+
+    // Draws fish
     for (Fish *fish : fishes)
     {
         DrawFish(fish);
@@ -145,6 +167,13 @@ void Screen::Update()
     SDL_GetMouseState(&mouse_x, &mouse_y);
     SDL_UpdateWindowSurface(window);
 }
+
+
+size_t hash<Vector2D>::operator()(const Vector2D &point) const
+{
+    return hash<int>{}(int(point.x)) ^ hash<int>{}(int(point.y) << 1);
+}
+
 
 int Randint(int min, int max) {
     return rand() % (max - min + 1) + min;

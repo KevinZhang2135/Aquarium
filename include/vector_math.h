@@ -9,6 +9,8 @@ class Vector2D {
         Vector2D();
         Vector2D(float x, float y);
 
+        bool operator==(const Vector2D other) const;
+
         float Magnitude();
         float Angle();
 
