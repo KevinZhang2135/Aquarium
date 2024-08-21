@@ -8,12 +8,12 @@ class Anchor {
         float radius;
         float angle;
 
-        Vector2D position;
+        Vector2 position;
         Anchor *next; // the next anchor of a chain
 
         Anchor();
-        Anchor(Vector2D point, float angle);
-        virtual void MoveTo(Vector2D point);
+        Anchor(Vector2 point, float angle);
+        virtual void MoveTo(Vector2 point);
 
     
 };
@@ -21,6 +21,6 @@ class Anchor {
 class Head : public Anchor {
     public:
         Head();
-        Head(Vector2D point, float angle);
-        void MoveTo(Vector2D point) override;
+        Head(Vector2 point, float angle);
+        void MoveTo(Vector2 point) override;
 };

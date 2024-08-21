@@ -1,7 +1,7 @@
 #include "fish.h"
 
-Fish::Fish() : Fish(Vector2D(0, 0), 0.0f) {}
-Fish::Fish(Vector2D position, float angle)
+Fish::Fish() : Fish(Vector2(0, 0), 0.0f) {}
+Fish::Fish(Vector2 position, float angle)
 {
     // Creates head
     head = new Head(position, angle);
@@ -18,7 +18,7 @@ Fish::Fish(Vector2D position, float angle)
         SetAnchorRadius(segment, i);
 
         // Determines separation distance of each segment
-        Vector2D separation(SCALE / 2, 0);
+        Vector2 separation(SCALE / 2, 0);
         position = position.Add(separation.RotateToAngle(angle));
         segment->position = position;
     }
@@ -45,11 +45,11 @@ Fish::~Fish()
 // Moves fish to point
 void Fish::MoveTo(float x, float y)
 {
-    MoveTo(Vector2D({x, y}));
+    MoveTo(Vector2({x, y}));
 }
 
 // Moves fish to point
-void Fish::MoveTo(Vector2D point)
+void Fish::MoveTo(Vector2 point)
 {
     // Does not move if point is within distance constraint
     if (head->position.DistanceTo(point) <= MAX_SPEED)

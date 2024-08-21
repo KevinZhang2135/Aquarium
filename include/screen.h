@@ -20,7 +20,7 @@ public:
     int mouse_x, mouse_y;
 
     // Hashmap of points for optimizing searches
-    unordered_map<Vector2D, vector<Fish>> grid;
+    unordered_map<Vector2, vector<Fish>> grid;
 
     Screen(int width, int height, bool full_screen = false);
     ~Screen();

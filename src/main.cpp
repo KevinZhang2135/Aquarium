@@ -29,13 +29,13 @@ void test()
     int height = 800;
     int GRID_SIZE = 200;
 
-    unordered_map<Vector2D, vector<int>> grid;
+    unordered_map<Vector2, vector<int>> grid;
 
     // Generates optimization grid
     int count = 0;
     for (int x = 0; x < width / GRID_SIZE; x++) {
         for (int y = 0; y < height / GRID_SIZE; y++) {
-            Vector2D point(x, y);
+            Vector2 point(x, y);
             grid[point] = {vector<int>()};
             grid[point].push_back(count);
             count++;

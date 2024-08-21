@@ -7,21 +7,21 @@ class Fish
 {
 public:
     const int MAX_SEGMENTS = 16;
-    Vector2D velocity;
+    Vector2 velocity;
 
     // Body segments
     Head *head;
     Anchor *tail;
 
     Fish();
-    Fish(Vector2D position, float angle);
+    Fish(Vector2 position, float angle);
     ~Fish();
 
-    Sint16* GetFinX(Vector2D anchor_position, int anchor_index);
-    Sint16* GetFinY(Vector2D anchor_position, int anchor_index);
+    Sint16* GetFinX(Vector2 anchor_position, int anchor_index);
+    Sint16* GetFinY(Vector2 anchor_position, int anchor_index);
 
     void MoveTo(float x, float y);
-    void MoveTo(Vector2D point);
+    void MoveTo(Vector2 point);
     void Update();
 
 private:
