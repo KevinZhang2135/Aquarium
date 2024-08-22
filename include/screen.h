@@ -7,6 +7,7 @@
 #include "SDL2_gfxPrimitives.h"
 #include "fish.h"
 #include "anchors.h"
+#include "spatial_hash.h"
 
 using namespace std;
 
@@ -18,9 +19,6 @@ public:
 
     int width, height;
     int mouse_x, mouse_y;
-
-    // Hashmap of points for optimizing searches
-    unordered_map<Vector2, vector<Fish>> grid;
 
     Screen(int width, int height, bool full_screen = false);
     ~Screen();
@@ -38,6 +36,9 @@ private:
     SDL_Renderer *renderer;
 
     Fish *fishes[NUM_FISH];
+
+    // Spatial hash of points for optimizing searches
+    SpatialHash *spatial_hash;
 };
 
 int Randint(int min, int max);

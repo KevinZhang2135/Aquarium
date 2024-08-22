@@ -25,13 +25,6 @@ Screen::Screen(int width, int height, bool full_screen)
         renderer = SDL_CreateRenderer(window, -1, 0);
     }
 
-    // Generates optimization grid
-    for (int x = 0; x < width / GRID_SIZE; x++) {
-        for (int y = 0; y < height / GRID_SIZE; y++) {
-            grid[{Vector2(x, y)}] = {vector<Fish>()};
-        }
-    }
-
     // Generates fish
     for (int i = 0; i < NUM_FISH; i++)
     {
@@ -41,10 +34,15 @@ Screen::Screen(int width, int height, bool full_screen)
         Fish *fish = new Fish(position, angle);
         fishes[i] = fish;
     }
+
+    // Generates optimization hash arrays
+    spatial_hash = new SpatialHash(*fishes, NUM_FISH, GRID_SIZE);
 }
 
 Screen::~Screen()
 {
+    delete spatial_hash;
+
     for (int i = 0; i < NUM_FISH; i++)
     {
         delete fishes[i];

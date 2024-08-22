@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "anchors.h"
-#include "vector_math.h"
+#include "vector2.h"
 
 class Fish
 {
