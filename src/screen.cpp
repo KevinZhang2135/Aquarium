@@ -36,12 +36,12 @@ Screen::Screen(int width, int height, bool full_screen)
     }
 
     // Generates optimization hash arrays
-    spatial_hash = new SpatialHash(*fishes, NUM_FISH, GRID_SIZE);
+    spatial_hash = new SpatialHash(fishes, NUM_FISH, GRID_SIZE);
 }
 
 Screen::~Screen()
 {
-    delete spatial_hash;
+    // delete spatial_hash;
 
     for (int i = 0; i < NUM_FISH; i++)
     {

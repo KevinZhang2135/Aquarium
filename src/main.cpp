@@ -1,6 +1,6 @@
 #include <iostream>
 #include "screen.h"
-#include "vector_math.h"
+#include "vector2.h"
 #include "fish.h"
 
 #define SCREEN_WIDTH 800
@@ -45,7 +45,6 @@ void test()
     // Reference unpacking
     for (const auto &[key, value] : grid)
     {
-
         std::cout << key.x << ", " << key.y << std::endl;
     }
 }

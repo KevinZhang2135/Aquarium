@@ -11,18 +11,19 @@ struct HashIndexPair {
 
 class SpatialHash {
     public:
-        SpatialHash(Fish *fishes, int num_fish, int grid_size);
+        SpatialHash(Fish *fishes[], int num_fish, int grid_size);
         ~SpatialHash();
+        
         int GetIndicesFromHash() const;
         void SortHashList();
         void Update();
     
     private:
-        Fish *fishes;
-
         int num_fish;
         int grid_size;
 
         int *hash_list;
         int *start_indices;
+
+        Fish *fishes[];
 };
