@@ -36,8 +36,3 @@ class Vector2 {
         Vector2 MoveTowards(Vector2 point, float length);
         Vector2 MoveTowards(float angle, float length);
 };
-
-template <>
-struct hash<Vector2> {
-    size_t operator()(const Vector2 &point) const;
-};

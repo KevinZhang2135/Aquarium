@@ -99,8 +99,3 @@ Vector2 Vector2::MoveTowards(float angle, float length)
 
     return Add(displacement);
 }
-
-size_t hash<Vector2>::operator()(const Vector2 &point) const
-{
-    return hash<int>{}(int(point.x)) ^ hash<int>{}(int(point.y) << 1);
-}

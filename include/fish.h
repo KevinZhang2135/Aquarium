@@ -17,9 +17,6 @@ public:
     Fish(Vector2 position, float angle);
     ~Fish();
 
-    Sint16* GetFinX(Vector2 anchor_position, int anchor_index);
-    Sint16* GetFinY(Vector2 anchor_position, int anchor_index);
-
     void MoveTo(float x, float y);
     void MoveTo(Vector2 point);
     void Update();

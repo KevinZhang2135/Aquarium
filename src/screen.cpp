@@ -1,6 +1,6 @@
 #include "screen.h"
 
-Screen::Screen(int width, int height, bool full_screen)
+Screen::Screen(uint width, uint height, bool full_screen)
 {
     // Seeds random number generator with current time
     srand(time(NULL));
@@ -26,7 +26,7 @@ Screen::Screen(int width, int height, bool full_screen)
     }
 
     // Generates fish
-    for (int i = 0; i < NUM_FISH; i++)
+    for (uint i = 0; i < NUM_FISH; i++)
     {
         Vector2 position (Randint(0, width), Randint(0, height));
         float angle = M_PI * (Randint(0, 360) / 360.0f);
@@ -43,7 +43,7 @@ Screen::~Screen()
 {
     // delete spatial_hash;
 
-    for (int i = 0; i < NUM_FISH; i++)
+    for (uint i = 0; i < NUM_FISH; i++)
     {
         delete fishes[i];
     }
@@ -80,7 +80,7 @@ void Screen::DrawFish(const Fish *fish)
     Anchor *temp = nullptr;
 
     // Traverses the linked list for each anchor of the fish
-    int i = 0;
+    uint i = 0;
     while (anchor != nullptr)
     {
         // 0xAABBGGRR
@@ -116,7 +116,7 @@ void Screen::DrawFins(Anchor *anchor)
     for (int sign = -1; sign <= 1; sign += 2)
     {
         // Draws a series of circles extending from the body at the fin angle
-        for (int i = 1; i <= fin_segments; i++)
+        for (uint i = 1; i <= fin_segments; i++)
         {
             Vector2 fin_position = anchor->position.MoveTowards(
                 anchor->angle + fin_angle * sign,
@@ -158,10 +158,18 @@ void Screen::Render()
 
 void Screen::Update()
 {
+    spatial_hash->Update();
     for (Fish *fish : fishes)
     {
         fish->MoveTo(mouse_x, mouse_y);
     }
+
+
+    Vector2 point(mouse_x, mouse_y);
+    vector<uint> indices = spatial_hash->GetIndicesFromPoint(point);
+    // if (indices.size() != 0) {
+    //     std::cout << "Hovering over fish: " << mouse_x << ", " << mouse_y << std::endl;
+    // }
 
     SDL_GetMouseState(&mouse_x, &mouse_y);
     SDL_UpdateWindowSurface(window);

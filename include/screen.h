@@ -20,7 +20,7 @@ public:
     int width, height;
     int mouse_x, mouse_y;
 
-    Screen(int width, int height, bool full_screen = false);
+    Screen(uint width, uint height, bool full_screen = false);
     ~Screen();
     bool Running();
     void HandleEvents();
