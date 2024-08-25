@@ -2,13 +2,14 @@
 
 #include <iostream>
 #include <vector>
+#include <limits>
 
 #include "fish.h"
 #include "vector2.h"
 
 struct KeyIndexPair
 {
-    uint key, index;
+    uint cell_key, fish_index;
 
     static bool Compare(KeyIndexPair a, KeyIndexPair b);
 };
@@ -19,9 +20,9 @@ public:
     SpatialHash(Fish *fishes[], int num_fish, int grid_size);
     ~SpatialHash();
 
+    Vector2 PointToCellCoord(Vector2 point) const;
     uint HashPoint(Vector2 point) const;
-    vector<uint> GetIndicesFromPoint(Vector2 point) const;
-    void FindStartIndices();
+    vector<Fish *> GetAllFishFromPoint(Vector2 point) const;
     void Update();
 
 private:

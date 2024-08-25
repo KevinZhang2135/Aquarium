@@ -15,24 +15,24 @@ class Vector2 {
 
         bool operator==(const Vector2 other) const;
 
-        float Magnitude();
-        float Angle();
+        float Magnitude() const;
+        float Angle() const;
 
         /* Basic vector operations */
-        Vector2 Add(Vector2 vector);
-        Vector2 Subtract(Vector2 vector);
-        Vector2 Multiply(float scalar);
-        Vector2 Divide(float scalar);
+        Vector2 Add(Vector2 vector) const;
+        Vector2 Subtract(Vector2 vector) const;
+        Vector2 Multiply(float scalar) const;
+        Vector2 Divide(float scalar) const;
 
         /* Vector scaling */
-        Vector2 ScaleToLength(float length);
-        Vector2 Normalize();
+        Vector2 ScaleToLength(float length) const;
+        Vector2 Normalize() const;
 
         /* Vector rotation */
-        Vector2 RotateToAngle(float angle);
+        Vector2 RotateToAngle(float angle) const;
 
         /* Distance */
-        float DistanceTo(Vector2 point);
-        Vector2 MoveTowards(Vector2 point, float length);
-        Vector2 MoveTowards(float angle, float length);
+        float DistanceTo(Vector2 point) const;
+        Vector2 MoveTowards(Vector2 point, float length) const;
+        Vector2 MoveTowards(float angle, float length) const;
 };

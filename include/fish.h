@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <vector>
+
 #include "anchors.h"
 #include "vector2.h"
 
@@ -13,17 +15,23 @@ public:
     Head *head;
     Anchor *tail;
 
-    Fish();
-    Fish(Vector2 position, float angle);
+    Fish(int grid_size);
+    Fish(Vector2 position, float angle, int grid_size);
     ~Fish();
 
-    void MoveTo(float x, float y);
-    void MoveTo(Vector2 point);
-    void Update();
+    void Separate(Vector2 close_center);
+    void Align(Vector2 average_velocity);
+    void Cohere(Vector2 average_position);
+    void Move();
+
+    void Update(vector<Fish *> nearby_boids);
 
 private:
-    const float SCALE = 8;    
     const float MAX_SPEED = 2;
+    const float SCALE = 8;   
+    const float COLLISION_DIST = SCALE * 5; 
+    
+    int search_radius; 
     
     void SetAnchorRadius(Anchor *anchor, int anchor_index);
 };
