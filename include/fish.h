@@ -28,8 +28,8 @@ public:
 
 private:
     const float MAX_SPEED = 2;
-    const float SCALE = 8;   
-    const float COLLISION_DIST = SCALE * 5; 
+    const float SCALE = 4;   
+    const float COLLISION_DIST = SCALE * 4; 
     
     int search_radius; 
     

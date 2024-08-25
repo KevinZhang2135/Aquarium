@@ -4,7 +4,7 @@
 
 class Anchor {
     public:
-        const float DIST_CONSTRAINT = 4;
+        const float DIST_CONSTRAINT = 2;
         float radius;
         float angle;
 

@@ -5,7 +5,7 @@ Fish::Fish(Vector2 position, float angle, int grid_size)
     : search_radius(grid_size)
 {
     velocity = {MAX_SPEED, 0};
-    velocity.RotateToAngle(angle);
+    velocity = velocity.RotateToAngle(angle + M_PI);
 
     // Creates head
     head = new Head(position, angle);
@@ -68,22 +68,28 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
 // Avoids boids within collision distance
 void Fish::Separate(Vector2 close_center)
 {
-    float factor = 0.05;
-    velocity.Add(close_center.Multiply(factor));
+    float factor = 1.0f;
+    Vector2 acceleration = head->position.Subtract(close_center);
+
+    velocity.Add(acceleration.Multiply(factor));
 }
 
 // Matches the velocity and heading of nearby boids
 void Fish::Align(Vector2 average_velocity)
 {
-    float factor = 0.005;
-    velocity.Add(average_velocity.Multiply(factor));
+    float factor = 1.0f;
+    Vector2 acceleration = average_velocity.Subtract(velocity);
+
+    velocity.Add(acceleration.Multiply(factor));
 }
 
 // Moves towards the center of nearby boids
 void Fish::Cohere(Vector2 average_position)
 {
-    float factor = 0.005;
-    velocity.Add(average_position.Multiply(factor));
+    float factor = 1.0f;
+    Vector2 acceleration = average_position.Subtract(head->position);
+
+    velocity.Add(acceleration.Multiply(factor));
 }
 
 void Fish::Move()
@@ -101,7 +107,6 @@ void Fish::Update(vector<Fish *> nearby_boids)
     // Average center and number of very close boids to avoid
     Vector2 close_center;
     uint close_count = 0;
-    
 
     for (Fish *boid : nearby_boids)
     {
@@ -144,5 +149,3 @@ void Fish::Update(vector<Fish *> nearby_boids)
 
     Move();
 }
-
-
