@@ -41,18 +41,17 @@ Screen::Screen(uint width, uint height, bool full_screen)
 
 Screen::~Screen()
 {
-    // delete spatial_hash;
-
+    delete spatial_hash;
     for (uint i = 0; i < NUM_FISH; i++)
-    {
         delete fishes[i];
-    }
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
 }
 
+/// @brief Returns whether the screen is running
+/// @return Whether the screen is running
 bool Screen::Running()
 {
     return isRunning;
@@ -74,10 +73,22 @@ void Screen::HandleEvents()
     }
 }
 
+/// @brief Renders the specified fish onto the renderer
+/// @param fish The fish to be drawn
 void Screen::DrawFish(const Fish *fish) const
 {
     Anchor *anchor = fish->head;
     Anchor *temp = nullptr;
+
+    // Debug point
+    filledCircleColor(
+        renderer,
+        anchor->position.x,
+        anchor->position.y,
+        anchor->radius,
+        0xffffffff);
+
+    return; // Prevents actual fish from being drawn for debugging
 
     // Traverses the linked list for each anchor of the fish
     uint i = 0;
@@ -96,15 +107,15 @@ void Screen::DrawFish(const Fish *fish) const
             color);
 
         if (draw_fin)
-        {
             DrawFins(anchor);
-        }
 
         anchor = anchor->next;
         i++;
     }
 }
 
+/// @brief Draws fins extending from the specified anchor
+/// @param anchor The anchor to drawn fins from
 void Screen::DrawFins(Anchor *anchor) const
 {
     Uint32 color = 0xffcc9066;
@@ -141,32 +152,25 @@ void Screen::Render() const
 
     // Draws optimization grid lines
     for (int x = 0; x < width; x += GRID_SIZE)
-    {
         vlineColor(renderer, x, 0, height, 0xffffffff);
-    }
 
     for (int y = 0; y < width; y += GRID_SIZE)
-    {
         hlineColor(renderer, 0, height, y, 0xffffffff);
-    }
+    
+
+    // Draws debug circle
+    circleColor(renderer, mouse_x, mouse_y, GRID_SIZE, 0xffffffff);
 
     // Draws fish
     for (Fish *fish : fishes)
-    {
         DrawFish(fish);
-    }
+    
 
     SDL_RenderPresent(renderer);
 }
 
-// Searches for nearby boids
-void Screen::UpdateBoid(Fish *boid)
+vector<Fish *> Screen::SearchForBoids(Vector2 point) const
 {
-    // Gets cell position of boid
-    Vector2 position = boid->head->position;
-    int cell_x = position.x / GRID_SIZE;
-    int cell_y = position.y / GRID_SIZE;
-
     // Vector of all fish within a 3x3 grid
     vector<Fish *> nearby_boids;
 
@@ -175,16 +179,27 @@ void Screen::UpdateBoid(Fish *boid)
     {
         for (int offset_y = -1; offset_y <= 1; offset_y++)
         {
-            Vector2 offset(offset_x * GRID_SIZE, offset_y * GRID_SIZE);
-            vector<Fish *> other_boids = spatial_hash->GetAllFishFromPoint(
-                position.Add(offset));
+            Vector2 offset(offset_x, offset_y);
+            offset.Multiply(GRID_SIZE);
+
+            vector<Fish *> other_boids = spatial_hash->GetFishFromPoint(
+                point.Add(offset));
 
             nearby_boids.insert(
-                nearby_boids.end(), 
-                other_boids.begin(), 
+                nearby_boids.end(),
+                other_boids.begin(),
                 other_boids.end());
         }
     }
+
+    return nearby_boids;
+}
+
+// Updates boid movement
+void Screen::UpdateBoid(Fish *boid) const
+{
+    Vector2 position = boid->head->position;
+    vector<Fish *> nearby_boids = SearchForBoids(position);
 
     // Updates boid
     boid->Update(nearby_boids);
@@ -193,10 +208,13 @@ void Screen::UpdateBoid(Fish *boid)
 void Screen::Update()
 {
     spatial_hash->Update();
-    for (Fish *fish : fishes)
-    {
-        UpdateBoid(fish);
-    }
+    // for (Fish *fish : fishes)
+    // {
+    //     UpdateBoid(fish);
+    // }
+
+    Vector2 mouse(mouse_x, mouse_y);
+    vector<Fish *> nearby_boids = SearchForBoids(mouse);
 
     SDL_GetMouseState(&mouse_x, &mouse_y);
     SDL_UpdateWindowSurface(window);

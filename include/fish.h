@@ -33,5 +33,5 @@ private:
     
     int search_radius; 
     
-    void SetAnchorRadius(Anchor *anchor, int anchor_index);
+    void SetAnchorRadius(Anchor *anchor, int anchor_index) const;
 };

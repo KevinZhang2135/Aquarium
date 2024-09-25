@@ -13,9 +13,7 @@ class Anchor {
 
         Anchor();
         Anchor(Vector2 point, float angle);
-        virtual void MoveTo(Vector2 point);
-
-    
+        virtual void MoveTo(Vector2 point);    
 };
 
 class Head : public Anchor {

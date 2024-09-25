@@ -8,6 +8,8 @@ Anchor::Anchor(Vector2 point, float angle)
     next = nullptr;
 }
 
+/// @brief Moves the anchor by a vector pointing towards a point
+/// @param point The point to move towards
 void Anchor::MoveTo(Vector2 point)
 {
     // Does not move if point is within distance constraint
@@ -27,6 +29,8 @@ void Anchor::MoveTo(Vector2 point)
 Head::Head() : Anchor() {}
 Head::Head(Vector2 point, float angle) : Anchor(point, angle) {}
 
+/// @brief Moves the head by a vector pointing towards a point
+/// @param point The point to move towards
 void Head::MoveTo(Vector2 point)
 {
     angle = point.Subtract(position).Angle();

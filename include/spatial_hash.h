@@ -20,10 +20,9 @@ public:
     SpatialHash(Fish *fishes[], int num_fish, int grid_size);
     ~SpatialHash();
 
-    Vector2 PointToCellCoord(Vector2 point) const;
     uint HashPoint(Vector2 point) const;
-    vector<Fish *> GetAllFishFromPoint(Vector2 point) const;
-    void Update();
+    vector<Fish *> GetFishFromPoint(Vector2 point) const;
+    void Update() const;
 
 private:
     int num_fish;

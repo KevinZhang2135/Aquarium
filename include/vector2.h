@@ -18,20 +18,16 @@ class Vector2 {
         float Magnitude() const;
         float Angle() const;
 
-        /* Basic vector operations */
         Vector2 Add(Vector2 vector) const;
         Vector2 Subtract(Vector2 vector) const;
         Vector2 Multiply(float scalar) const;
         Vector2 Divide(float scalar) const;
 
-        /* Vector scaling */
         Vector2 ScaleToLength(float length) const;
         Vector2 Normalize() const;
 
-        /* Vector rotation */
         Vector2 RotateToAngle(float angle) const;
 
-        /* Distance */
         float DistanceTo(Vector2 point) const;
         Vector2 MoveTowards(Vector2 point, float length) const;
         Vector2 MoveTowards(float angle, float length) const;

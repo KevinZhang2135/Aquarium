@@ -23,8 +23,9 @@ SpatialHash::~SpatialHash()
     delete[] start_indices;
 }
 
-// Generates a hash value by multiplying the x and y components of the cell
-// coordinate of a point by two arbitary prime numbers and summing them
+/// @brief Generates a hash value by from cell coordinates
+/// @param point The point on the cell grid
+/// @return An unsigned hash representation of a point
 uint SpatialHash::HashPoint(Vector2 point) const
 {
     int cell_x = point.x / grid_size;
@@ -33,18 +34,21 @@ uint SpatialHash::HashPoint(Vector2 point) const
 }
 
 // Retrieves the indices of all fish in a cell
-vector<Fish *> SpatialHash::GetAllFishFromPoint(Vector2 point) const
+vector<Fish *> SpatialHash::GetFishFromPoint(Vector2 point) const
 {
     uint key = HashPoint(point) % num_fish;
     vector<Fish *> indices;
 
-     // Loops from the index of the first fish of a cell
+    // Loops from the index of the first fish of a cell
     for (uint i = start_indices[key]; i < num_fish; i++)
     {
-        if (spatial_list[i].cell_key != key)
-        {
+        // No fish are found in that cell
+        if (i == -1)
             break;
-        }
+
+        // End of fish in that cell
+        if (spatial_list[i].cell_key != key)
+            break;
 
         uint fish_index = spatial_list[i].fish_index;
         Fish *fish = fishes[fish_index];
@@ -54,7 +58,8 @@ vector<Fish *> SpatialHash::GetAllFishFromPoint(Vector2 point) const
     return indices;
 }
 
-void SpatialHash::Update()
+/// @brief Updates all fish in the spatial hash
+void SpatialHash::Update() const
 {
     // Generates a hash for the position of each fish
     for (uint i = 0; i < num_fish; i++)
@@ -66,7 +71,7 @@ void SpatialHash::Update()
         uint key = HashPoint(position) % num_fish;
 
         spatial_list[i] = KeyIndexPair{key, i};
-        start_indices[key] = UINT_MAX;
+        start_indices[i] = -1;
     }
 
     // Sorts spatial list by cell key
@@ -79,8 +84,7 @@ void SpatialHash::Update()
         uint prev_key = (i == 0) ? UINT_MAX : spatial_list[i - 1].cell_key;
 
         if (key != prev_key)
-        {
             start_indices[key] = i;
-        }
+        
     }
 }

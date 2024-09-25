@@ -14,7 +14,7 @@ using namespace std;
 class Screen
 {
 public:
-    static const int NUM_FISH = 80;
+    static const int NUM_FISH = 10;
     static const int GRID_SIZE = 200;
 
     int width, height;
@@ -29,7 +29,8 @@ public:
     void DrawFins(Anchor *anchor) const;
     void Render() const;
 
-    void UpdateBoid(Fish *fish);
+    vector<Fish *> SearchForBoids(Vector2 point) const;
+    void UpdateBoid(Fish *fish) const;
     void Update();
 
 private:

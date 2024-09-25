@@ -46,8 +46,11 @@ Fish::~Fish()
     }
 }
 
-// Uses a continuous piecewise function to approximate the radius of a fish
-void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
+/// @brief Determines the radius of a fish anchor with continuous piecewise 
+/// function
+/// @param anchor The anchor of which the radius is set
+/// @param anchor_index The position of the anchor
+void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index) const
 {
     // x-value where the fish radius decreases at a decreasing rate
     float tapering_x = (1 + sqrt(2)) / 2;
@@ -55,7 +58,7 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
     // x-value of the segment on the graph on the interval [0, 2]
     float fish_pos_x = float(anchor_index) / MAX_SEGMENTS * 2;
 
-    // radius is approximated with a semi-circle before tapering and with a
+    // Radius is approximated with a semi-circle before tapering and with a
     // decreasing exponential after tapering
     float fish_radius = SCALE;
     fish_radius *= (fish_pos_x <= tapering_x)
@@ -65,38 +68,45 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index)
     anchor->radius = fish_radius;
 }
 
-// Avoids boids within collision distance
+/// @brief Moves fish away from close boids within collision distance
+/// @param close_center The center of close boids
 void Fish::Separate(Vector2 close_center)
 {
     float factor = 1.0f;
     Vector2 acceleration = head->position.Subtract(close_center);
 
-    velocity.Add(acceleration.Multiply(factor));
+    velocity = velocity.Add(acceleration.Multiply(factor));
 }
 
-// Matches the velocity and heading of nearby boids
+/// @brief Matches the velocity and heading of nearby boids
+/// @param average_velocity The mean velocity of all nearby boids
 void Fish::Align(Vector2 average_velocity)
 {
     float factor = 1.0f;
     Vector2 acceleration = average_velocity.Subtract(velocity);
 
-    velocity.Add(acceleration.Multiply(factor));
+    velocity = velocity.Add(acceleration.Multiply(factor));
 }
 
-// Moves towards the center of nearby boids
+/// @brief Moves towards the center of nearby boids
+/// @param average_position The center of nearby boids
 void Fish::Cohere(Vector2 average_position)
 {
     float factor = 1.0f;
     Vector2 acceleration = average_position.Subtract(head->position);
 
-    velocity.Add(acceleration.Multiply(factor));
+    velocity = velocity.Add(acceleration.Multiply(factor));
 }
 
+/// @brief Moves the fish using boid behavior
 void Fish::Move()
 {
     head->MoveTo(head->position.Add(velocity));
 }
 
+/// @brief Searches for nearby boids to adjust heading
+/// @param nearby_boids The boids that are within a 3x3 cell grid centered on
+///                     the fish
 void Fish::Update(vector<Fish *> nearby_boids)
 {
     // Average of all nearby boids
