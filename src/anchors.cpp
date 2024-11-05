@@ -20,10 +20,20 @@ void Anchor::MoveTo(Vector2 point)
     angle = velocity.Angle();
 
     position = point.Subtract(velocity);
-    
+
     // Moves the rest of the body using inverse kinematics
     if (next != nullptr)
         next->MoveTo(position);
+}
+
+/// @brief Sets the position of the anchor to the specified point without
+/// gradual procedural movement
+/// @param point The specified point to set the anchor position to
+void Anchor::SetPosition(Vector2 point)
+{
+    position = point.MoveTowards(angle, DIST_CONSTRAINT);
+    if (next != nullptr)
+        next->SetPosition(position);
 }
 
 Head::Head() : Anchor() {}
@@ -39,4 +49,14 @@ void Head::MoveTo(Vector2 point)
     // Moves the rest of the body using inverse kinematics
     if (next != nullptr)
         next->MoveTo(point);
+}
+
+/// @brief Sets the position of the head to the specified point without gradual
+/// procedural movement
+/// @param point The specified point to set the head position to
+void Head::SetPosition(Vector2 point)
+{
+    position = point;
+    if (next != nullptr)
+        next->SetPosition(position);
 }

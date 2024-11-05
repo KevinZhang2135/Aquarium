@@ -7,28 +7,27 @@
 #include "fish.h"
 #include "vector2.h"
 
-struct KeyIndexPair
-{
-    uint cell_key, fish_index;
-
-    static bool Compare(KeyIndexPair a, KeyIndexPair b);
-};
-
 class SpatialHash
 {
+    struct KeyIndexPair
+    {
+        uint cell_key, fish_index;
+        static bool Compare(KeyIndexPair a, KeyIndexPair b);
+    };
+
 public:
-    SpatialHash(Fish *fishes[], int num_fish, int grid_size);
+    vector<Fish *> fishes;
+
+    SpatialHash(int num_fish, int grid_size, Vector2 screen_size);
     ~SpatialHash();
 
     uint HashPoint(Vector2 point) const;
     vector<Fish *> GetFishFromPoint(Vector2 point) const;
-    void Update() const;
+    void Update();
 
 private:
     int num_fish;
     int grid_size;
-
-    Fish **fishes;
 
     // List of key-index pairs
     KeyIndexPair *spatial_list;
@@ -36,5 +35,6 @@ private:
     // List of the start indices of consecutive cell positions for a
     // sorted spatial list
     int *start_indices;
-    
 };
+
+int Randint(int min, int max);

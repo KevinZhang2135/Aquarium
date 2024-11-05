@@ -1,8 +1,14 @@
 #include "fish.h"
 
-Fish::Fish(int grid_size) : Fish(Vector2(0, 0), 0.0f, grid_size) {}
-Fish::Fish(Vector2 position, float angle, int grid_size)
-    : search_radius(grid_size)
+Fish::Fish(int search_radius, Vector2 screen_size)
+    : Fish(Vector2(0, 0),
+           0.0f,
+           search_radius,
+           screen_size) {}
+
+Fish::Fish(Vector2 position, float angle, int search_radius, Vector2 screen_size)
+    : search_radius(search_radius),
+      screen_size(screen_size)
 {
     velocity = {MAX_SPEED, 0};
     velocity = velocity.RotateToAngle(angle + M_PI);
@@ -23,18 +29,16 @@ Fish::Fish(Vector2 position, float angle, int grid_size)
 
         // Determines separation distance of each segment
         Vector2 separation(SCALE / 2, 0);
-        position = position.Add(separation.RotateToAngle(angle));
+        position = position + separation.RotateToAngle(angle);
         segment->position = position;
     }
 
     tail = segment;
 }
 
-// Deletes all segment anchors
 Fish::~Fish()
 {
-    Anchor *prev = head;
-    Anchor *temp = nullptr;
+    Anchor *prev = head, *temp = nullptr;
 
     // Loops through each anchor and deletes it
     while (prev != nullptr)
@@ -46,7 +50,7 @@ Fish::~Fish()
     }
 }
 
-/// @brief Determines the radius of a fish anchor with continuous piecewise 
+/// @brief Determines the radius of a fish anchor with continuous piecewise
 /// function
 /// @param anchor The anchor of which the radius is set
 /// @param anchor_index The position of the anchor
@@ -70,38 +74,75 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index) const
 
 /// @brief Moves fish away from close boids within collision distance
 /// @param close_center The center of close boids
-void Fish::Separate(Vector2 close_center)
+/// @return The acceleration away from the center
+Vector2 Fish::Separate(Vector2 close_center) const
 {
-    float factor = 1.0f;
+    float factor = 0.0001f;
     Vector2 acceleration = head->position.Subtract(close_center);
 
-    velocity = velocity.Add(acceleration.Multiply(factor));
+    return acceleration.Multiply(factor);
 }
 
 /// @brief Matches the velocity and heading of nearby boids
 /// @param average_velocity The mean velocity of all nearby boids
-void Fish::Align(Vector2 average_velocity)
+/// @return The acceleration towards the mean heading
+Vector2 Fish::Align(Vector2 average_velocity) const
 {
-    float factor = 1.0f;
+    float factor = 0.001f;
     Vector2 acceleration = average_velocity.Subtract(velocity);
 
-    velocity = velocity.Add(acceleration.Multiply(factor));
+    return acceleration.Multiply(factor);
 }
 
 /// @brief Moves towards the center of nearby boids
 /// @param average_position The center of nearby boids
-void Fish::Cohere(Vector2 average_position)
+/// @return The acceleration towards the center
+Vector2 Fish::Cohere(Vector2 average_position) const
 {
-    float factor = 1.0f;
+    float factor = 0.01f;
     Vector2 acceleration = average_position.Subtract(head->position);
 
-    velocity = velocity.Add(acceleration.Multiply(factor));
+    return acceleration.Multiply(factor);
+}
+
+/// @brief Sets the head position of the fish to the specified point without
+/// gradual procedural movement
+/// @param point The specified point to set the head position to
+void Fish::SetPosition(Vector2 point)
+{
+    head->SetPosition(point);
 }
 
 /// @brief Moves the fish using boid behavior
 void Fish::Move()
 {
-    head->MoveTo(head->position.Add(velocity));
+    head->MoveTo(head->position + velocity);
+
+    // Keeps fish within margin distance outside the screen
+    int margin = 0;
+    Vector2 min_bound = {-float(margin), -float(margin)};
+    Vector2 max_bound = min_bound.Multiply(-1) + screen_size;
+
+    Vector2 new_position = head->position;
+
+    // left bound
+    if (head->position.x < min_bound.x)
+        new_position.x = max_bound.x;
+
+    // right bound
+    else if (head->position.x > max_bound.x)
+        new_position.x = min_bound.x;
+
+    // top bound
+    if (head->position.y < min_bound.y)
+        new_position.y = max_bound.y;
+
+    // bottom bound
+    else if (head->position.y > max_bound.y)
+        new_position.y = min_bound.y;
+
+    if (new_position != head->position)
+        SetPosition(new_position);
 }
 
 /// @brief Searches for nearby boids to adjust heading
@@ -110,8 +151,7 @@ void Fish::Move()
 void Fish::Update(vector<Fish *> nearby_boids)
 {
     // Average of all nearby boids
-    Vector2 average_center;
-    Vector2 average_velocity;
+    Vector2 average_center, average_velocity;
     uint boid_count = 0;
 
     // Average center and number of very close boids to avoid
@@ -120,42 +160,49 @@ void Fish::Update(vector<Fish *> nearby_boids)
 
     for (Fish *boid : nearby_boids)
     {
-        Vector2 boid_position = boid->head->position;
-        float distance = head->position.DistanceTo(boid_position);
-
-        // Schools with nearby boids within search radius
-        if (distance <= search_radius)
+        if (boid != this)
         {
-            average_center.Add(boid_position);
-            average_velocity.Add(boid->velocity);
-            boid_count++;
-        }
+            Vector2 boid_position = boid->head->position;
+            float distance = head->position.DistanceTo(boid_position);
 
-        // Avoids boids within collision distance
-        if (this != boid && distance < COLLISION_DIST)
-        {
-            close_center.Add(boid_position);
-            close_count++;
+            // Schools with nearby boids within search radius
+            if (distance <= search_radius)
+            {
+                average_center = average_center + boid_position;
+                average_velocity = average_velocity + boid->velocity;
+                boid_count++;
+            }
+
+            // Avoids boids within collision distance
+            if (distance < COLLISION_DIST)
+            {
+                close_center = close_center + boid_position;
+                close_count++;
+            }
         }
     }
 
+    // Handles the cohesion, alignment, and separation behavior of boids
+    Vector2 cohere, align, separate;
     if (boid_count > 1)
     {
         // Moves towards the center of nearby boids
         average_center.Divide(boid_count);
-        Cohere(average_center);
+        cohere = Cohere(average_center);
 
         // Matches the velocity of nearby boids
         average_velocity.Divide(boid_count);
-        Align(average_velocity);
+        align = Align(average_velocity);
     }
 
     if (close_count > 0)
     {
         // Avoids boids within collision distance
         close_center.Divide(close_count);
-        Separate(close_center);
+        separate = Separate(close_center);
     }
 
-    Move();
+    velocity = velocity + cohere + align + separate;
+    if (velocity.Magnitude() > MAX_SPEED)
+        velocity = velocity.ScaleToLength(MAX_SPEED);
 }

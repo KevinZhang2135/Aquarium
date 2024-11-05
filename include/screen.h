@@ -14,7 +14,7 @@ using namespace std;
 class Screen
 {
 public:
-    static const int NUM_FISH = 10;
+    static const int NUM_FISH = 30;
     static const int GRID_SIZE = 200;
 
     int width, height;
@@ -38,10 +38,6 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
 
-    Fish *fishes[NUM_FISH];
-
-    // Spatial hash of points for optimizing searches
+    // Spatial hash of sorted points by cell for optimizing searches
     SpatialHash *spatial_hash;
 };
-
-int Randint(int min, int max);

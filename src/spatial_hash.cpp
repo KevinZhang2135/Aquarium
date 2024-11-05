@@ -1,15 +1,24 @@
 #include "spatial_hash.h"
 
-bool KeyIndexPair::Compare(KeyIndexPair a, KeyIndexPair b)
+bool SpatialHash::KeyIndexPair::Compare(KeyIndexPair a, KeyIndexPair b)
 {
     return a.cell_key < b.cell_key;
 }
 
-SpatialHash::SpatialHash(Fish *fishes[], int num_fish, int grid_size)
-    : fishes(fishes),
-      num_fish(num_fish),
+SpatialHash::SpatialHash(int num_fish, int grid_size, Vector2 screen_size)
+    : num_fish(num_fish),
       grid_size(grid_size)
 {
+    // Generates fish
+    for (uint i = 0; i < num_fish; i++)
+    {
+        Vector2 position(Randint(0, screen_size.x), Randint(0, screen_size.y));
+        float angle = M_PI * (Randint(0, 360) / 360.0f);
+
+        Fish *fish = new Fish(position, angle, grid_size, screen_size);
+        fishes.push_back(fish);
+    }
+
     spatial_list = new KeyIndexPair[grid_size];
     start_indices = new int[grid_size];
 
@@ -18,25 +27,30 @@ SpatialHash::SpatialHash(Fish *fishes[], int num_fish, int grid_size)
 
 SpatialHash::~SpatialHash()
 {
-    delete[] fishes;
+    for (Fish *fish : fishes)
+        delete fish;
+
+    fishes.clear();
     delete[] spatial_list;
     delete[] start_indices;
 }
 
-/// @brief Generates a hash value by from cell coordinates
+/// @brief Generates a compressed hash value by from cell coordinates
 /// @param point The point on the cell grid
 /// @return An unsigned hash representation of a point
 uint SpatialHash::HashPoint(Vector2 point) const
 {
     int cell_x = point.x / grid_size;
     int cell_y = point.y / grid_size;
-    return cell_x * 67474109 + cell_y * 87513581;
+    return abs((cell_x * 67474109 + cell_y * 87513581) % num_fish);
 }
 
-// Retrieves the indices of all fish in a cell
+/// @brief Retrieves the indices of all fish in a cell
+/// @param point The point to be hashed and lookup
+/// @return A vector of the indices of all fish in the specified cell
 vector<Fish *> SpatialHash::GetFishFromPoint(Vector2 point) const
 {
-    uint key = HashPoint(point) % num_fish;
+    uint key = HashPoint(point);
     vector<Fish *> indices;
 
     // Loops from the index of the first fish of a cell
@@ -59,7 +73,7 @@ vector<Fish *> SpatialHash::GetFishFromPoint(Vector2 point) const
 }
 
 /// @brief Updates all fish in the spatial hash
-void SpatialHash::Update() const
+void SpatialHash::Update()
 {
     // Generates a hash for the position of each fish
     for (uint i = 0; i < num_fish; i++)
@@ -68,7 +82,7 @@ void SpatialHash::Update() const
         Vector2 position = fish->head->position;
 
         // Converts fish position into hash
-        uint key = HashPoint(position) % num_fish;
+        uint key = HashPoint(position);
 
         spatial_list[i] = KeyIndexPair{key, i};
         start_indices[i] = -1;
@@ -85,6 +99,14 @@ void SpatialHash::Update() const
 
         if (key != prev_key)
             start_indices[key] = i;
-        
     }
+}
+
+/// @brief Generates a random number from min inclusive to max inclusive
+/// @param min The lower bound of random numbers
+/// @param max The upper bound of random numbers
+/// @return A random number in the range [min, max]
+int Randint(int min, int max)
+{
+    return rand() % (max - min + 1) + min;
 }
