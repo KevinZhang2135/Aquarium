@@ -3,26 +3,115 @@
 Vector2::Vector2() : x{0}, y{0} {}
 Vector2::Vector2(float x, float y) : x{x}, y{y} {}
 
+/// @brief Compares whether the components of two vectors are equal
+/// @param other The other vector to be compared
+/// @return True if the vectors are equal; false otherwise
 bool Vector2::operator==(const Vector2 &other) const
 {
     return (x == other.x && y == other.y);
 }
 
+/// @brief Compares whether the components of two vectors are not equal
+/// @param other The other vector to be compared
+/// @return True if the vectors are not equal; false otherwise
 bool Vector2::operator!=(const Vector2 &other) const
 {
     return !operator==(other);
 }
 
+/// @brief Unary plus operator that returns the identity of the vector
+/// @return A copy of the vector
+Vector2 Vector2::operator+() const
+{
+    return Vector2(x, y);
+}
+
+/// @brief Unary minus negates the vector by rotating π radians around the
+/// origin
+/// @return A negated vector
+Vector2 Vector2::operator-() const
+{
+    return Vector2(-x, -y);
+}
+
+/// @brief Binary addition that performs vector addition
+/// @param other The vector to be added
+/// @return The sum of the vectors
 Vector2 Vector2::operator+(const Vector2 &other) const
 {
     return Vector2(x + other.x, y + other.y);
 }
 
-// void Vector2::operator+=(const Vector2 &other)
-// {
-//     x += other.x;
-//     y += other.y;
-// }
+/// @brief Binary subtraction that performs vector subtraction
+/// @param other The vector that this is subtracted by
+/// @return The difference of the vectors
+Vector2 Vector2::operator-(const Vector2 &other) const
+{
+    return Vector2(x - other.x, y - other.y);
+}
+
+/// @brief Binary multiplication that performs vector scaling
+/// @param scalar The scalar to be applied to the vector
+/// @return A copy of the vector scaled by the specified scalar
+Vector2 Vector2::operator*(const float &scalar) const
+{
+    return Vector2(x * scalar, y * scalar);
+}
+
+/// @brief Binary division that performs vector scaling
+/// @param scalar The inverse of the scalar to be applied to the vector
+/// @return A copy of the vector scaled by the inverse of the specified scalar
+Vector2 Vector2::operator/(const float &scalar) const
+{
+    if (scalar == 0.0f)
+        throw std::runtime_error("Zero Division Error: attempted to divide by zero");
+
+    return Vector2(x / scalar, y / scalar);
+}
+
+/// @brief Compound assignment operator that performs in-place vector addition
+/// @param other The vector to be added
+/// @return The address of the sum of the vectors
+Vector2 &Vector2::operator+=(const Vector2 &other)
+{
+    x += other.x;
+    y += other.y;
+    return *this;
+}
+
+/// @brief Compound assignment operator that performs in-place vector 
+/// subtraction
+/// @param other The vector that this is subtracted by
+/// @return The address of the difference of the vectors
+Vector2 &Vector2::operator-=(const Vector2 &other)
+{
+    x -= other.x;
+    y -= other.y;
+    return *this;
+}
+
+/// @brief Binary multiplication that performs in-place vector scaling
+/// @param scalar The scalar to be applied to the vector
+/// @return The address of the vector after scaling
+Vector2 &Vector2::operator*=(const float &scalar)
+{
+    x *= scalar;
+    y *= scalar;
+    return *this;
+}
+
+/// @brief Binary division that performs vector scaling
+/// @param scalar The inverse of the scalar to be applied to the vector
+/// @return The address of the vector after scaling
+Vector2 &Vector2::operator/=(const float &scalar)
+{
+    if (scalar == 0.0f)
+        throw std::runtime_error("Zero Division Error: attempted to divide by zero");
+
+    x /= scalar;
+    y /= scalar;
+    return *this;
+}
 
 /// @brief Returns the Euclidean length of the vector from the origin
 /// @return The Euclidean length of the vector from the origin
@@ -41,24 +130,6 @@ float Vector2::Angle() const
     return SDL_atan2f(y, x);
 }
 
-Vector2 Vector2::Subtract(Vector2 vector) const
-{
-    return Vector2(this->x - vector.x, this->y - vector.y);
-}
-
-Vector2 Vector2::Multiply(float scalar) const
-{
-    return Vector2(x * scalar, y * scalar);
-}
-
-Vector2 Vector2::Divide(float scalar) const
-{
-    if (scalar == 0.0f)
-        throw std::runtime_error("Zero Division Error: attempted to divide by zero");
-
-    return Vector2(x / scalar, y / scalar);
-}
-
 /// @brief Returns a new vector scaled to the specified length
 /// @param length The specified length of the new vector
 /// @return A new vector with specified length
@@ -68,7 +139,7 @@ Vector2 Vector2::ScaleToLength(float length) const
         return Vector2();
 
     float scalar = length / Magnitude();
-    return Multiply(scalar);
+    return *this * scalar;
 }
 
 /// @brief Returns a normalized vector with length 1
@@ -107,7 +178,7 @@ float Vector2::DistanceTo(Vector2 point) const
 /// @return A new vector of length moved towards the point
 Vector2 Vector2::MoveTowards(Vector2 point, float length) const
 {
-    return point.Subtract(*this).ScaleToLength(length);
+    return (point - *this).ScaleToLength(length);
 }
 
 /// @brief Returns a vector moved length at the specified angle

@@ -14,7 +14,7 @@ using namespace std;
 class Screen
 {
 public:
-    static const int NUM_FISH = 30;
+    static const int NUM_FISH = 200;
     static const int GRID_SIZE = 200;
 
     int width, height;

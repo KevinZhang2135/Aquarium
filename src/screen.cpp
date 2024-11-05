@@ -180,7 +180,7 @@ vector<Fish *> Screen::SearchForBoids(Vector2 point) const
         for (int offset_y = -1; offset_y <= 1; offset_y++)
         {
             Vector2 offset(offset_x, offset_y);
-            offset.Multiply(GRID_SIZE);
+            offset = offset * GRID_SIZE;
 
             vector<Fish *> other_boids = spatial_hash->GetFishFromPoint(
                 point + offset);
@@ -197,8 +197,8 @@ vector<Fish *> Screen::SearchForBoids(Vector2 point) const
 
 void Screen::UpdateBoid(Fish *boid) const
 {
-    Vector2 position = boid->head->position;
-    vector<Fish *> nearby_boids = SearchForBoids(position);
+    // Vector2 position = boid->head->position;
+    vector<Fish *> nearby_boids = spatial_hash->fishes; // SearchForBoids(position);
 
     // Updates boid
     boid->Update(nearby_boids);

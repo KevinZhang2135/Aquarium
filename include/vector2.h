@@ -18,15 +18,21 @@ public:
     bool operator==(const Vector2 &other) const;
     bool operator!=(const Vector2 &other) const;
 
+    Vector2 operator+() const;
+    Vector2 operator-() const;
+
     Vector2 operator+(const Vector2 &other) const;
-    // void Vector2::operator+=(const Vector2 &other);
+    Vector2 operator-(const Vector2 &other) const;
+    Vector2 operator*(const float &scalar) const;
+    Vector2 operator/(const float &scalar) const;
+
+    Vector2 &operator+=(const Vector2 &other);
+    Vector2 &operator-=(const Vector2 &other);
+    Vector2 &operator*=(const float &scalar);
+    Vector2 &operator/=(const float &scalar);
 
     float Magnitude() const;
     float Angle() const;
-
-    Vector2 Subtract(Vector2 vector) const;
-    Vector2 Multiply(float scalar) const;
-    Vector2 Divide(float scalar) const;
 
     Vector2 ScaleToLength(float length) const;
     Vector2 Normalize() const;

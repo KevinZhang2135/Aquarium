@@ -19,7 +19,7 @@ void Anchor::MoveTo(Vector2 point)
     Vector2 velocity = position.MoveTowards(point, DIST_CONSTRAINT);
     angle = velocity.Angle();
 
-    position = point.Subtract(velocity);
+    position = point - velocity;
 
     // Moves the rest of the body using inverse kinematics
     if (next != nullptr)
@@ -43,7 +43,7 @@ Head::Head(Vector2 point, float angle) : Anchor(point, angle) {}
 /// @param point The point to move towards
 void Head::MoveTo(Vector2 point)
 {
-    angle = point.Subtract(position).Angle();
+    angle = (point - position).Angle();
     position = point;
 
     // Moves the rest of the body using inverse kinematics

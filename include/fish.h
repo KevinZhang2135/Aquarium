@@ -28,9 +28,14 @@ public:
     void Update(vector<Fish *> nearby_boids);
 
 private:
-    const float MAX_SPEED = 3;
+    const float MAX_SPEED = 4;
     const float SCALE = 4;
     const float COLLISION_DIST = SCALE * 4;
+
+    // The maximum distance the fish can travel off screen before being
+    // teleported to the other side
+    const float GRID_MARGIN = 50.0f;
+    Vector2 min_bound, max_bound;
 
     int search_radius;
     Vector2 screen_size;
