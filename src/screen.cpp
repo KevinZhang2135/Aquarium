@@ -29,7 +29,7 @@ Screen::Screen(uint width, uint height, bool full_screen)
     spatial_hash = new SpatialHash(
         NUM_FISH,
         GRID_SIZE,
-        Vector2{float(width), float(height)});
+        Vector2(width, height));
 }
 
 Screen::~Screen()
@@ -61,7 +61,7 @@ void Screen::HandleEvents()
 
     case SDL_MOUSEBUTTONDOWN:
         for (Fish *fish : spatial_hash->fishes)
-            fish->SetPosition(Vector2{float(mouse_x), float(mouse_y)});
+            fish->SetPosition(Vector2(mouse_x, mouse_y));
 
         break;
 
@@ -77,15 +77,18 @@ void Screen::DrawFish(const Fish *fish) const
     Anchor *anchor = fish->head;
     Anchor *temp = nullptr;
 
-    // Debug point
-    // filledCircleColor(
-    //     renderer,
-    //     anchor->position.x,
-    //     anchor->position.y,
-    //     anchor->radius,
-    //     0xffffffff);
+    if (debug)
+    {
+        // Debug point
+        filledCircleColor(
+            renderer,
+            anchor->position.x,
+            anchor->position.y,
+            anchor->radius,
+            0xffffffff);
 
-    // return; // Prevents actual fish from being drawn for debugging
+        return; // Prevents actual fish from being drawn for debugging
+    }
 
     // Traverses the linked list for each anchor of the fish
     uint i = 0;
@@ -113,7 +116,7 @@ void Screen::DrawFish(const Fish *fish) const
 
 /// @brief Draws fins extending from the specified anchor
 /// @param anchor The anchor to drawn fins from
-void Screen::DrawFins(Anchor *anchor) const
+void Screen::DrawFins(const Anchor *anchor) const
 {
     Uint32 color = 0xffcc9066;
     int fin_segments = 4;
@@ -147,20 +150,30 @@ void Screen::Render() const
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Draws optimization grid lines
-    for (int x = 0; x < width; x += GRID_SIZE)
-        vlineColor(renderer, x, 0, height, 0xffffffff);
-
-    for (int y = 0; y < width; y += GRID_SIZE)
-        hlineColor(renderer, 0, height, y, 0xffffffff);
-
-    // Draws debug circle
-    circleColor(renderer, mouse_x, mouse_y, GRID_SIZE, 0xffffffff);
-
     // Draws fish
     for (Fish *fish : spatial_hash->fishes)
-    {
         DrawFish(fish);
+
+    if (debug)
+    {
+        // Draws optimization grid lines
+        for (int x = 0; x < width; x += GRID_SIZE)
+            vlineColor(renderer, x, 0, height, 0xffffffff);
+
+        for (int y = 0; y < width; y += GRID_SIZE)
+            hlineColor(renderer, 0, height, y, 0xffffffff);
+
+        for (Fish *fish : spatial_hash->GetFishFromPoint(Vector2(mouse_x, mouse_y)))
+        {
+            Anchor *anchor = fish->head;
+            // Debug point
+            filledCircleColor(
+                renderer,
+                anchor->position.x,
+                anchor->position.y,
+                anchor->radius,
+                0xff0000ff);
+        }
     }
 
     SDL_RenderPresent(renderer);
@@ -197,8 +210,8 @@ vector<Fish *> Screen::SearchForBoids(Vector2 point) const
 
 void Screen::UpdateBoid(Fish *boid) const
 {
-    // Vector2 position = boid->head->position;
-    vector<Fish *> nearby_boids = spatial_hash->fishes; // SearchForBoids(position);
+    Vector2 position = boid->head->position;
+    vector<Fish *> nearby_boids = SearchForBoids(position);
 
     // Updates boid
     boid->Update(nearby_boids);

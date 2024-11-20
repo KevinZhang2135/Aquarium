@@ -79,7 +79,7 @@ Vector2 &Vector2::operator+=(const Vector2 &other)
     return *this;
 }
 
-/// @brief Compound assignment operator that performs in-place vector 
+/// @brief Compound assignment operator that performs in-place vector
 /// subtraction
 /// @param other The vector that this is subtracted by
 /// @return The address of the difference of the vectors
@@ -113,11 +113,19 @@ Vector2 &Vector2::operator/=(const float &scalar)
     return *this;
 }
 
+/// @brief Dot product or inner product of this vector and the specified vector
+/// @param other The specified vector to find the dot product with this vector
+/// @return The dot product of this vector and the specified vector
+float Vector2::DotProduct(const Vector2 &other) const
+{
+    return x * other.x + y * other.y;
+}
+
 /// @brief Returns the Euclidean length of the vector from the origin
 /// @return The Euclidean length of the vector from the origin
-float Vector2::Magnitude() const
+float Vector2::Norm() const
 {
-    return SDL_sqrtf(powf(x, 2) + powf(y, 2));
+    return SDL_sqrtf(DotProduct(*this));
 }
 
 /// @brief Returns the angle of the vector in radians
@@ -130,19 +138,21 @@ float Vector2::Angle() const
     return SDL_atan2f(y, x);
 }
 
-/// @brief Returns a new vector scaled to the specified length
+/// @brief Returns a new vector scaled to the specified length. A zero vector 
+/// is scaled to a zero vector
 /// @param length The specified length of the new vector
 /// @return A new vector with specified length
-Vector2 Vector2::ScaleToLength(float length) const
+Vector2 Vector2::ScaleToLength(const float length) const
 {
-    if (Magnitude() == 0.0f)
+    if (Norm() == 0.0f)
         return Vector2();
 
-    float scalar = length / Magnitude();
+    float scalar = length / Norm();
     return *this * scalar;
 }
 
-/// @brief Returns a normalized vector with length 1
+/// @brief Returns a normalized vector with length 1. The zero vector is
+/// normalized as the zero vector
 /// @return A normalized vector
 Vector2 Vector2::Normalize() const
 {
@@ -152,11 +162,11 @@ Vector2 Vector2::Normalize() const
 /// @brief Returns a new vector rotated to the specified angle
 /// @param angle
 /// @return A new vector rotated to the specified angle
-Vector2 Vector2::RotateToAngle(float angle) const
+Vector2 Vector2::RotateToAngle(const float angle) const
 {
     Vector2 new_vector(
-        SDL_cosf(angle) * Magnitude(),
-        SDL_sinf(angle) * Magnitude());
+        SDL_cosf(angle) * Norm(),
+        SDL_sinf(angle) * Norm());
 
     return new_vector;
 }
@@ -164,19 +174,16 @@ Vector2 Vector2::RotateToAngle(float angle) const
 /// @brief Returns the Euclidean distance to the point
 /// @param point The point to compare the distance
 /// @return The distance to the specified point
-float Vector2::DistanceTo(Vector2 point) const
+float Vector2::DistanceTo(const Vector2 point) const
 {
-    float dx = point.x - this->x; // difference in x
-    float dy = point.y - this->y; // difference in y
-
-    return sqrtf(powf(dx, 2) + powf(dy, 2));
+    return (point - *this).Norm();
 }
 
 /// @brief Returns a new vector of length moved towards the specified point
 /// @param point The point to move towards
 /// @param length The length of the displacement vector
 /// @return A new vector of length moved towards the point
-Vector2 Vector2::MoveTowards(Vector2 point, float length) const
+Vector2 Vector2::MoveTowards(const Vector2 point, const float length) const
 {
     return (point - *this).ScaleToLength(length);
 }
@@ -185,7 +192,7 @@ Vector2 Vector2::MoveTowards(Vector2 point, float length) const
 /// @param angle The angle to move to
 /// @param length The length of the displacement vector
 /// @return A new vector of length moved at the angle
-Vector2 Vector2::MoveTowards(float angle, float length) const
+Vector2 Vector2::MoveTowards(const float angle, const float length) const
 {
     Vector2 displacement(length, 0);
     displacement = displacement.RotateToAngle(angle);

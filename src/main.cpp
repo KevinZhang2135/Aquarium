@@ -25,10 +25,14 @@ void run()
 
 void test()
 {
+    Vector2 x(1, 1);
+
+    std::cout << x.toString() << std::endl;
+    std::cout << (x).Normalize().toString() << std::endl;
 }
 
 int main(int argc, char *args[])
 {
-    run();
+    test();
     return 0;
 }

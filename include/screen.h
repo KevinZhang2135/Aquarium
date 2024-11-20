@@ -26,7 +26,7 @@ public:
     void HandleEvents();
 
     void DrawFish(const Fish *fish) const;
-    void DrawFins(Anchor *anchor) const;
+    void DrawFins(const Anchor *anchor) const;
     void Render() const;
 
     vector<Fish *> SearchForBoids(Vector2 point) const;
@@ -34,6 +34,8 @@ public:
     void Update();
 
 private:
+    bool debug = false;
+
     bool isRunning;
     SDL_Window *window;
     SDL_Renderer *renderer;

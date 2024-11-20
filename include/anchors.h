@@ -14,15 +14,15 @@ public:
 
     Anchor();
     Anchor(Vector2 point, float angle);
-    virtual void MoveTo(Vector2 point);
-    virtual void SetPosition(Vector2 point);
+    virtual void MoveTo(const Vector2 point);
+    virtual void SetPosition(const Vector2 point);
 };
 
 class Head : public Anchor
 {
 public:
     Head();
-    Head(Vector2 point, float angle);
-    void MoveTo(Vector2 point) override;
-    void SetPosition(Vector2 point) override;
+    Head(const Vector2 point, const float angle);
+    void MoveTo(const Vector2 point) override;
+    void SetPosition(const Vector2 point) override;
 };

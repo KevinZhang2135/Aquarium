@@ -19,18 +19,18 @@ public:
     Fish(Vector2 position, float angle, int search_radius, Vector2 screen_size);
     ~Fish();
 
-    Vector2 Separate(Vector2 close_center) const;
-    Vector2 Align(Vector2 average_velocity) const;
-    Vector2 Cohere(Vector2 average_position) const;
+    Vector2 Separate(const Vector2 close_center) const;
+    Vector2 Align(const Vector2 average_velocity) const;
+    Vector2 Cohere(const Vector2 average_position) const;
 
     void Move();
-    void SetPosition(Vector2 point);
-    void Update(vector<Fish *> nearby_boids);
+    void SetPosition(const Vector2 point);
+    void Update(const vector<Fish *> nearby_boids);
 
 private:
-    const float MAX_SPEED = 4;
-    const float SCALE = 4;
-    const float COLLISION_DIST = SCALE * 4;
+    const float MAX_SPEED = 3;
+    const float SCALE = 3;
+    const float COLLISION_DIST = SCALE * SCALE;
 
     // The maximum distance the fish can travel off screen before being
     // teleported to the other side
@@ -40,5 +40,5 @@ private:
     int search_radius;
     Vector2 screen_size;
 
-    void SetAnchorRadius(Anchor *anchor, int anchor_index) const;
+    void SetAnchorRadius(Anchor *anchor, const int anchor_index) const;
 };

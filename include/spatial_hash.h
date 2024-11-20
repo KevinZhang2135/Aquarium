@@ -30,11 +30,11 @@ private:
     int grid_size;
 
     // List of key-index pairs
-    KeyIndexPair *spatial_list;
+    vector<KeyIndexPair> spatial_list;
 
     // List of the start indices of consecutive cell positions for a
     // sorted spatial list
-    int *start_indices;
+    vector<int> start_indices;
 };
 
 int Randint(int min, int max);

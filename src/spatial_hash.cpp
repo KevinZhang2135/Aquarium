@@ -13,14 +13,13 @@ SpatialHash::SpatialHash(int num_fish, int grid_size, Vector2 screen_size)
     for (uint i = 0; i < num_fish; i++)
     {
         Vector2 position(Randint(0, screen_size.x), Randint(0, screen_size.y));
-        float angle = M_PI * (Randint(0, 360) / 360.0f);
+        float angle = M_PI * (Randint(0, 360) / 180.0f);
 
-        Fish *fish = new Fish(position, angle, grid_size, screen_size);
-        fishes.push_back(fish);
+        fishes.push_back(new Fish(position, angle, grid_size, screen_size));
     }
 
-    spatial_list = new KeyIndexPair[grid_size];
-    start_indices = new int[grid_size];
+    spatial_list = vector<KeyIndexPair>(grid_size);
+    start_indices = vector<int>(grid_size);
 
     Update();
 }
@@ -31,8 +30,8 @@ SpatialHash::~SpatialHash()
         delete fish;
 
     fishes.clear();
-    delete[] spatial_list;
-    delete[] start_indices;
+    spatial_list.clear();
+    start_indices.clear();
 }
 
 /// @brief Generates a compressed hash value by from cell coordinates
@@ -89,7 +88,7 @@ void SpatialHash::Update()
     }
 
     // Sorts spatial list by cell key
-    std::sort(spatial_list, spatial_list + num_fish, KeyIndexPair::Compare);
+    std::sort(spatial_list.begin(), spatial_list.end(), KeyIndexPair::Compare);
 
     // Finds the index of a first occurrence of consecutive cell keys
     for (uint i = 0; i < num_fish; i++)

@@ -1,15 +1,16 @@
 #include "fish.h"
 
-Fish::Fish(int search_radius, Vector2 screen_size)
+Fish::Fish(const int search_radius, const Vector2 screen_size)
     : Fish(Vector2(0, 0),
            0.0f,
            search_radius,
            screen_size) {}
 
-Fish::Fish(Vector2 position, float angle, int search_radius, Vector2 screen_size)
+Fish::Fish(Vector2 position, float angle, int search_radius,
+           Vector2 screen_size)
     : search_radius(search_radius),
       screen_size(screen_size),
-      min_bound(Vector2{-float(GRID_MARGIN), -float(GRID_MARGIN)}),
+      min_bound(Vector2(-GRID_MARGIN, -GRID_MARGIN)),
       max_bound(-min_bound + screen_size)
 {
     velocity = {MAX_SPEED, 0};
@@ -56,7 +57,7 @@ Fish::~Fish()
 /// function
 /// @param anchor The anchor of which the radius is set
 /// @param anchor_index The position of the anchor
-void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index) const
+void Fish::SetAnchorRadius(Anchor *anchor, const int anchor_index) const
 {
     // x-value where the fish radius decreases at a decreasing rate
     float tapering_x = (1 + sqrt(2)) / 2;
@@ -77,9 +78,9 @@ void Fish::SetAnchorRadius(Anchor *anchor, int anchor_index) const
 /// @brief Moves fish away from close boids within collision distance
 /// @param close_center The center of close boids
 /// @return The acceleration away from the center
-Vector2 Fish::Separate(Vector2 close_center) const
+Vector2 Fish::Separate(const Vector2 close_center) const
 {
-    float factor = 0.05f;
+    float factor = 0.1f;
     Vector2 acceleration = head->position - close_center;
 
     return acceleration * factor;
@@ -88,9 +89,9 @@ Vector2 Fish::Separate(Vector2 close_center) const
 /// @brief Matches the velocity and heading of nearby boids
 /// @param average_velocity The mean velocity of all nearby boids
 /// @return The acceleration towards the mean heading
-Vector2 Fish::Align(Vector2 average_velocity) const
+Vector2 Fish::Align(const Vector2 average_velocity) const
 {
-    float factor = 0.01f;
+    float factor = 0.005f;
     Vector2 acceleration = average_velocity - velocity;
 
     return acceleration * factor;
@@ -99,9 +100,9 @@ Vector2 Fish::Align(Vector2 average_velocity) const
 /// @brief Moves towards the center of nearby boids
 /// @param average_position The center of nearby boids
 /// @return The acceleration towards the center
-Vector2 Fish::Cohere(Vector2 average_position) const
+Vector2 Fish::Cohere(const Vector2 average_position) const
 {
-    float factor = 0.001f;
+    float factor = 0.0001f;
     Vector2 acceleration = average_position - head->position;
 
     return acceleration * factor;
@@ -110,7 +111,7 @@ Vector2 Fish::Cohere(Vector2 average_position) const
 /// @brief Sets the head position of the fish to the specified point without
 /// gradual procedural movement
 /// @param point The specified point to set the head position to
-void Fish::SetPosition(Vector2 point)
+void Fish::SetPosition(const Vector2 point)
 {
     head->SetPosition(point);
 }
@@ -149,7 +150,7 @@ void Fish::Move()
 /// @brief Searches for nearby boids to adjust heading
 /// @param nearby_boids The boids that are within a 3x3 cell grid centered on
 ///                     the fish
-void Fish::Update(vector<Fish *> nearby_boids)
+void Fish::Update(const vector<Fish *> nearby_boids)
 {
     // Average of all nearby boids
     Vector2 average_center, average_velocity;
