@@ -1,19 +1,18 @@
 #pragma once
 #include <iostream>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #include "SDL.h"
 #include "SDL2_gfxPrimitives.h"
-#include "fish.h"
 #include "anchors.h"
+#include "fish.h"
 #include "spatial_hash.h"
 
 using namespace std;
 
-class Screen
-{
-public:
+class Screen {
+   public:
     static const int NUM_FISH = 200;
     static const int GRID_SIZE = 200;
 
@@ -33,8 +32,8 @@ public:
     void UpdateBoid(Fish *fish) const;
     void Update();
 
-private:
-    bool debug = false;
+   private:
+    const bool debug = false;
 
     bool isRunning;
     SDL_Window *window;

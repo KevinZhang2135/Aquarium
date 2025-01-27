@@ -1,7 +1,8 @@
 #include <iostream>
+
+#include "fish.h"
 #include "screen.h"
 #include "vector2.h"
-#include "fish.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800
@@ -9,12 +10,10 @@
 using namespace std;
 
 Screen *screen = nullptr;
-void run()
-{
+void run() {
     screen = new Screen(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    while (screen->Running())
-    {
+    while (screen->Running()) {
         screen->HandleEvents();
         screen->Update();
         screen->Render();
@@ -23,16 +22,7 @@ void run()
     delete screen;
 }
 
-void test()
-{
-    Vector2 x(1, 1);
-
-    std::cout << x.toString() << std::endl;
-    std::cout << (x).Normalize().toString() << std::endl;
-}
-
-int main(int argc, char *args[])
-{
-    test();
+int main(int argc, char *args[]) {
+    run();
     return 0;
 }

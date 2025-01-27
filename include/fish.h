@@ -5,9 +5,8 @@
 #include "anchors.h"
 #include "vector2.h"
 
-class Fish
-{
-public:
+class Fish {
+   public:
     const int MAX_SEGMENTS = 16;
     Vector2 velocity;
 
@@ -27,9 +26,9 @@ public:
     void SetPosition(const Vector2 point);
     void Update(const vector<Fish *> nearby_boids);
 
-private:
+   private:
     const float MAX_SPEED = 3;
-    const float SCALE = 3;
+    const float SCALE = 4;
     const float COLLISION_DIST = SCALE * SCALE;
 
     // The maximum distance the fish can travel off screen before being

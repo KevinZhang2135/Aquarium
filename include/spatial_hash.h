@@ -1,21 +1,19 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
 #include <limits>
+#include <vector>
 
 #include "fish.h"
 #include "vector2.h"
 
-class SpatialHash
-{
-    struct KeyIndexPair
-    {
+class SpatialHash {
+    struct KeyIndexPair {
         uint cell_key, fish_index;
         static bool Compare(KeyIndexPair a, KeyIndexPair b);
     };
 
-public:
+   public:
     vector<Fish *> fishes;
 
     SpatialHash(int num_fish, int grid_size, Vector2 screen_size);
@@ -25,7 +23,7 @@ public:
     vector<Fish *> GetFishFromPoint(Vector2 point) const;
     void Update();
 
-private:
+   private:
     int num_fish;
     int grid_size;
 

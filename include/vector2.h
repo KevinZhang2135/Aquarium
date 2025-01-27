@@ -1,15 +1,15 @@
 #pragma once
 
-#include <unordered_map>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+
 #include "SDL.h"
 
 using namespace std;
 
-class Vector2
-{
-public:
+class Vector2 {
+   public:
     float x, y;
 
     Vector2();
@@ -43,6 +43,6 @@ public:
     float DistanceTo(const Vector2 point) const;
     Vector2 MoveTowards(const Vector2 point, const float length) const;
     Vector2 MoveTowards(const float angle, const float length) const;
-    
+
     std::string toString() const;
 };
