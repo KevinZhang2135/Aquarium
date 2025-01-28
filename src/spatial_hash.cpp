@@ -1,11 +1,8 @@
 #include "spatial_hash.h"
 
-bool SpatialHash::KeyIndexPair::Compare(KeyIndexPair a, KeyIndexPair b) {
-    return a.cell_key < b.cell_key;
-}
+bool SpatialHash::KeyIndexPair::Compare(KeyIndexPair a, KeyIndexPair b) { return a.cell_key < b.cell_key; }
 
-SpatialHash::SpatialHash(int num_fish, int grid_size, Vector2 screen_size)
-    : num_fish(num_fish), grid_size(grid_size) {
+SpatialHash::SpatialHash(int num_fish, int grid_size, Vector2 screen_size) : num_fish(num_fish), grid_size(grid_size) {
     // Generates fish
     for (uint i = 0; i < num_fish; i++) {
         Vector2 position(Randint(0, screen_size.x), Randint(0, screen_size.y));

@@ -3,8 +3,7 @@
 Fish::Fish(const int search_radius, const Vector2 screen_size)
     : Fish(Vector2(0, 0), 0.0f, search_radius, screen_size) {}
 
-Fish::Fish(Vector2 position, float angle, int search_radius,
-           Vector2 screen_size)
+Fish::Fish(Vector2 position, float angle, int search_radius, Vector2 screen_size)
     : search_radius(search_radius),
       screen_size(screen_size),
       min_bound(Vector2(-GRID_MARGIN, -GRID_MARGIN)),
@@ -60,10 +59,8 @@ void Fish::SetAnchorRadius(Anchor *anchor, const int anchor_index) const {
     // Radius is approximated with a semi-circle before tapering and with a
     // decreasing exponential after tapering
     float fish_radius = SCALE;
-    fish_radius *=
-        (fish_pos_x <= tapering_x)
-            ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
-            : powf(M_E, -fish_pos_x + tapering_x);
+    fish_radius *= (fish_pos_x <= tapering_x) ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
+                                              : powf(M_E, -fish_pos_x + tapering_x);
 
     anchor->radius = fish_radius;
 }

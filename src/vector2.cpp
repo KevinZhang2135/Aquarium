@@ -6,16 +6,12 @@ Vector2::Vector2(float x, float y) : x{x}, y{y} {}
 /// @brief Compares whether the components of two vectors are equal
 /// @param other The other vector to be compared
 /// @return True if the vectors are equal; false otherwise
-bool Vector2::operator==(const Vector2 &other) const {
-    return (x == other.x && y == other.y);
-}
+bool Vector2::operator==(const Vector2 &other) const { return (x == other.x && y == other.y); }
 
 /// @brief Compares whether the components of two vectors are not equal
 /// @param other The other vector to be compared
 /// @return True if the vectors are not equal; false otherwise
-bool Vector2::operator!=(const Vector2 &other) const {
-    return !operator==(other);
-}
+bool Vector2::operator!=(const Vector2 &other) const { return !operator==(other); }
 
 /// @brief Unary plus operator that returns the identity of the vector
 /// @return A copy of the vector
@@ -29,31 +25,24 @@ Vector2 Vector2::operator-() const { return Vector2(-x, -y); }
 /// @brief Binary addition that performs vector addition
 /// @param other The vector to be added
 /// @return The sum of the vectors
-Vector2 Vector2::operator+(const Vector2 &other) const {
-    return Vector2(x + other.x, y + other.y);
-}
+Vector2 Vector2::operator+(const Vector2 &other) const { return Vector2(x + other.x, y + other.y); }
 
 /// @brief Binary subtraction that performs vector subtraction
 /// @param other The vector that this is subtracted by
 /// @return The difference of the vectors
-Vector2 Vector2::operator-(const Vector2 &other) const {
-    return Vector2(x - other.x, y - other.y);
-}
+Vector2 Vector2::operator-(const Vector2 &other) const { return Vector2(x - other.x, y - other.y); }
 
 /// @brief Binary multiplication that performs vector scaling
 /// @param scalar The scalar to be applied to the vector
 /// @return A copy of the vector scaled by the specified scalar
-Vector2 Vector2::operator*(const float &scalar) const {
-    return Vector2(x * scalar, y * scalar);
-}
+Vector2 Vector2::operator*(const float &scalar) const { return Vector2(x * scalar, y * scalar); }
 
 /// @brief Binary division that performs vector scaling
 /// @param scalar The inverse of the scalar to be applied to the vector
 /// @return A copy of the vector scaled by the inverse of the specified scalar
 Vector2 Vector2::operator/(const float &scalar) const {
     if (scalar == 0.0f) {
-        throw std::runtime_error(
-            "Zero Division Error: attempted to divide by zero");
+        throw std::runtime_error("Zero Division Error: attempted to divide by zero");
     }
 
     return Vector2(x / scalar, y / scalar);
@@ -91,9 +80,7 @@ Vector2 &Vector2::operator*=(const float &scalar) {
 /// @param scalar The inverse of the scalar to be applied to the vector
 /// @return The address of the vector after scaling
 Vector2 &Vector2::operator/=(const float &scalar) {
-    if (scalar == 0.0f)
-        throw std::runtime_error(
-            "Zero Division Error: attempted to divide by zero");
+    if (scalar == 0.0f) throw std::runtime_error("Zero Division Error: attempted to divide by zero");
 
     x /= scalar;
     y /= scalar;
@@ -103,9 +90,7 @@ Vector2 &Vector2::operator/=(const float &scalar) {
 /// @brief Dot product or inner product of this vector and the specified vector
 /// @param other The specified vector to find the dot product with this vector
 /// @return The dot product of this vector and the specified vector
-float Vector2::DotProduct(const Vector2 &other) const {
-    return x * other.x + y * other.y;
-}
+float Vector2::DotProduct(const Vector2 &other) const { return x * other.x + y * other.y; }
 
 /// @brief Returns the Euclidean length of the vector from the origin
 /// @return The Euclidean length of the vector from the origin
@@ -145,9 +130,7 @@ Vector2 Vector2::RotateToAngle(const float angle) const {
 /// @brief Returns the Euclidean distance to the point
 /// @param point The point to compare the distance
 /// @return The distance to the specified point
-float Vector2::DistanceTo(const Vector2 point) const {
-    return (point - *this).Norm();
-}
+float Vector2::DistanceTo(const Vector2 point) const { return (point - *this).Norm(); }
 
 /// @brief Returns a new vector of length moved towards the specified point
 /// @param point The point to move towards
@@ -168,6 +151,4 @@ Vector2 Vector2::MoveTowards(const float angle, const float length) const {
     return *this + displacement;
 }
 
-std::string Vector2::toString() const {
-    return std::to_string(x) + " " + std::to_string(y);
-}
+std::string Vector2::toString() const { return std::to_string(x) + " " + std::to_string(y); }

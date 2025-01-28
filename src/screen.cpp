@@ -12,9 +12,7 @@ Screen::Screen(uint width, uint height, bool full_screen) {
     isRunning = SDL_Init(SDL_INIT_VIDEO) == 0;
 
     if (isRunning) {
-        window =
-            SDL_CreateWindow("Aquarium", SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+        window = SDL_CreateWindow("Aquarium", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
         renderer = SDL_CreateRenderer(window, -1, 0);
     }
@@ -64,8 +62,7 @@ void Screen::DrawFish(const Fish *fish) const {
 
     if (debug) {
         // Debug point
-        filledCircleColor(renderer, anchor->position.x, anchor->position.y,
-                          anchor->radius, 0xffffffff);
+        filledCircleColor(renderer, anchor->position.x, anchor->position.y, anchor->radius, 0xffffffff);
 
         return;  // Prevents actual fish from being drawn for debugging
     }
@@ -75,12 +72,10 @@ void Screen::DrawFish(const Fish *fish) const {
     while (anchor != nullptr) {
         // 0xAABBGGRR
         Uint32 color = 0xffab4700;
-        bool draw_fins =
-            (i == fish->MAX_SEGMENTS / 5) || (i == fish->MAX_SEGMENTS * 5 / 7);
+        bool draw_fins = (i == fish->MAX_SEGMENTS / 5) || (i == fish->MAX_SEGMENTS * 5 / 7);
 
         // Draws body
-        filledCircleColor(renderer, anchor->position.x, anchor->position.y,
-                          anchor->radius, color);
+        filledCircleColor(renderer, anchor->position.x, anchor->position.y, anchor->radius, color);
 
         if (draw_fins) {
             DrawFins(anchor);
@@ -105,11 +100,9 @@ void Screen::DrawFins(const Anchor *anchor) const {
         // Draws a series of circles extending from the body at the fin angle
         for (uint i = 1; i <= fin_segments; i++) {
             Vector2 fin_position =
-                anchor->position.MoveTowards(anchor->angle + fin_angle * sign,
-                                             fin_radius * (1.0f + i / 2.0f));
+                anchor->position.MoveTowards(anchor->angle + fin_angle * sign, fin_radius * (1.0f + i / 2.0f));
 
-            filledCircleColor(renderer, fin_position.x, fin_position.y,
-                              fin_radius * (1.0f - i / 10.0f), color);
+            filledCircleColor(renderer, fin_position.x, fin_position.y, fin_radius * (1.0f - i / 10.0f), color);
         }
     }
 }
@@ -132,12 +125,10 @@ void Screen::Render() const {
             hlineColor(renderer, 0, height, y, 0xffffffff);
         }
 
-        for (Fish *fish :
-             spatial_hash->GetFishFromPoint(Vector2(mouse_x, mouse_y))) {
+        for (Fish *fish : spatial_hash->GetFishFromPoint(Vector2(mouse_x, mouse_y))) {
             Anchor *anchor = fish->head;
             // Debug point
-            filledCircleColor(renderer, anchor->position.x, anchor->position.y,
-                              anchor->radius, 0xff0000ff);
+            filledCircleColor(renderer, anchor->position.x, anchor->position.y, anchor->radius, 0xff0000ff);
         }
     }
 
@@ -157,11 +148,9 @@ vector<Fish *> Screen::SearchForBoids(Vector2 point) const {
             Vector2 offset(offset_x, offset_y);
             offset = offset * GRID_SIZE;
 
-            vector<Fish *> other_boids =
-                spatial_hash->GetFishFromPoint(point + offset);
+            vector<Fish *> other_boids = spatial_hash->GetFishFromPoint(point + offset);
 
-            nearby_boids.insert(nearby_boids.end(), other_boids.begin(),
-                                other_boids.end());
+            nearby_boids.insert(nearby_boids.end(), other_boids.begin(), other_boids.end());
         }
     }
 
