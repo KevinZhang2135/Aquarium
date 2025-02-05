@@ -26,8 +26,7 @@ void Anchor::MoveTo(const Vector2 point) {
     }
 }
 
-/// @brief Sets the position of the anchor to the specified point without
-/// gradual procedural movement
+/// @brief Sets the position of the anchor to the specified point without gradual procedural movement
 /// @param point The specified point to set the anchor position to
 void Anchor::SetPosition(const Vector2 point) {
     position = point.MoveTowards(angle, DIST_CONSTRAINT);
@@ -53,8 +52,7 @@ void Head::MoveTo(const Vector2 point) {
     }
 }
 
-/// @brief Sets the position of the head to the specified point without gradual
-/// procedural movement
+/// @brief Sets the position of the head to the specified point without gradual procedural movement
 /// @param point The specified point to set the head position to
 void Head::SetPosition(const Vector2 point) {
     position = point;

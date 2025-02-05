@@ -45,31 +45,11 @@ Fish::~Fish() {
     }
 }
 
-/// @brief Determines the radius of a fish anchor with continuous piecewise
-/// function
-/// @param anchor The anchor of which the radius is set
-/// @param anchor_index The position of the anchor
-void Fish::SetAnchorRadius(Anchor *anchor, const int anchor_index) const {
-    // x-value where the fish radius decreases at a decreasing rate
-    float tapering_x = (1 + sqrt(2)) / 2;
-
-    // x-value of the segment on the graph on the interval [0, 2]
-    float fish_pos_x = float(anchor_index) / MAX_SEGMENTS * 2;
-
-    // Radius is approximated with a semi-circle before tapering and with a
-    // decreasing exponential after tapering
-    float fish_radius = SCALE;
-    fish_radius *= (fish_pos_x <= tapering_x) ? sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2
-                                              : powf(M_E, -fish_pos_x + tapering_x);
-
-    anchor->radius = fish_radius;
-}
-
 /// @brief Moves fish away from close boids within collision distance
 /// @param close_center The center of close boids
 /// @return The acceleration away from the center
 Vector2 Fish::Separate(const Vector2 close_center) const {
-    float factor = 0.1f;
+    float factor = 0.01f;
     Vector2 acceleration = head->position - close_center;
 
     return acceleration * factor;
@@ -89,14 +69,13 @@ Vector2 Fish::Align(const Vector2 average_velocity) const {
 /// @param average_position The center of nearby boids
 /// @return The acceleration towards the center
 Vector2 Fish::Cohere(const Vector2 average_position) const {
-    float factor = 0.0001f;
+    float factor = 0.0005f;
     Vector2 acceleration = average_position - head->position;
 
     return acceleration * factor;
 }
 
-/// @brief Sets the head position of the fish to the specified point without
-/// gradual procedural movement
+/// @brief Sets the head position of the fish to the specified point without gradual procedural movement
 /// @param point The specified point to set the head position to
 void Fish::SetPosition(const Vector2 point) { head->SetPosition(point); }
 
@@ -136,8 +115,7 @@ void Fish::Move() {
 }
 
 /// @brief Searches for nearby boids to adjust heading
-/// @param nearby_boids The boids that are within a 3x3 cell grid centered on
-///                     the fish
+/// @param nearby_boids The boids that are within a 3x3 cell grid centered on the fish
 void Fish::Update(const vector<Fish *> nearby_boids) {
     // Average of all nearby boids
     Vector2 average_center, average_velocity;
@@ -187,4 +165,38 @@ void Fish::Update(const vector<Fish *> nearby_boids) {
 
     velocity += cohere + align + separate;
     velocity = velocity.ScaleToLength(MAX_SPEED);
+}
+
+/// @brief Sets the radius of a fish anchor
+/// @param anchor The anchor of which the radius is set
+/// @param anchor_index The position of the anchor
+void Fish::SetAnchorRadius(Anchor *anchor, const int anchor_index) const {
+    // Radius is approximated with a semi-circle before tapering and with a
+    // decreasing exponential after tapering
+    float fish_radius = SCALE * CalcAnchorRadius(anchor_index);
+    anchor->radius = fish_radius;
+}
+
+/// @brief Returns the radius of an anchor using its index in a continuous piecewise function
+/// @param anchor_index The index of the anchor
+/// @return The radius of the anchor
+float Fish::CalcAnchorRadius(const int anchor_index) {
+    // x-value of the segment on the graph on the interval [0, 2]
+    float fish_pos_x = float(anchor_index) / MAX_SEGMENTS * 2;
+
+    // x-value where the fish radius decreases at a decreasing rate
+    float tapering_x = (1 + sqrt(2)) / 2;
+    std::cout << anchor_index << "\n";
+
+    float radius;
+    if (fish_pos_x <= tapering_x) {
+        // Semi-circle function
+        radius = sqrtf(1 - powf(fish_pos_x - 0.5f, 2)) + (2 - sqrt(2)) / 2;
+
+    } else {
+        // Exponential function that tapers
+        radius = powf(M_E, -fish_pos_x + tapering_x);
+    }
+
+    return radius;
 }

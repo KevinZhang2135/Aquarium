@@ -13,7 +13,6 @@ Screen::Screen(uint width, uint height, bool full_screen) {
 
     if (isRunning) {
         window = SDL_CreateWindow("Aquarium", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-
         renderer = SDL_CreateRenderer(window, -1, 0);
     }
 
@@ -63,8 +62,7 @@ void Screen::DrawFish(const Fish *fish) const {
     if (debug) {
         // Debug point
         filledCircleColor(renderer, anchor->position.x, anchor->position.y, anchor->radius, 0xffffffff);
-
-        return;  // Prevents actual fish from being drawn for debugging
+        return;  // Prevents fish from being drawn for debugging
     }
 
     // Traverses the linked list for each anchor of the fish
@@ -157,6 +155,8 @@ vector<Fish *> Screen::SearchForBoids(Vector2 point) const {
     return nearby_boids;
 }
 
+/// @brief Updates the heading of a specified boid
+/// @param boid The specified boid to update its velocity
 void Screen::UpdateBoid(Fish *boid) const {
     Vector2 position = boid->head->position;
     vector<Fish *> nearby_boids = SearchForBoids(position);
@@ -165,6 +165,7 @@ void Screen::UpdateBoid(Fish *boid) const {
     boid->Update(nearby_boids);
 }
 
+/// @brief Updates the heading and position of each boid
 void Screen::Update() {
     spatial_hash->Update();
     for (Fish *fish : spatial_hash->fishes) {

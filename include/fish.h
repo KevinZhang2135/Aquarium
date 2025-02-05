@@ -7,7 +7,7 @@
 
 class Fish {
    public:
-    const int MAX_SEGMENTS = 16;
+    static const int MAX_SEGMENTS = 16;
     Vector2 velocity;
 
     // Body segments
@@ -27,17 +27,18 @@ class Fish {
     void Update(const vector<Fish *> nearby_boids);
 
    private:
-    const float MAX_SPEED = 3;
-    const float SCALE = 4;
-    const float COLLISION_DIST = SCALE * SCALE;
+    static constexpr float MAX_SPEED = 2.0F;
+    static constexpr float SCALE = 4;
+    static constexpr float COLLISION_DIST = SCALE * SCALE;
 
     // The maximum distance the fish can travel off screen before being
     // teleported to the other side
-    const float GRID_MARGIN = 50.0f;
+    static constexpr float GRID_MARGIN = 50.0f;
     Vector2 min_bound, max_bound;
 
     int search_radius;
     Vector2 screen_size;
 
     void SetAnchorRadius(Anchor *anchor, const int anchor_index) const;
+    static float CalcAnchorRadius(const int anchor_index);
 };
