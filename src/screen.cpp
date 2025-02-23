@@ -69,7 +69,7 @@ void Screen::DrawFish(const Fish *fish) const {
     uint i = 0;
     while (anchor != nullptr) {
         // 0xAABBGGRR
-        Uint32 color = 0xffab4700;
+        uint color = 0xffab4700;
         bool draw_fins = (i == fish->MAX_SEGMENTS / 5) || (i == fish->MAX_SEGMENTS * 5 / 7);
 
         // Draws body
@@ -87,7 +87,7 @@ void Screen::DrawFish(const Fish *fish) const {
 /// @brief Draws fins extending from the specified anchor
 /// @param anchor The anchor to drawn fins from
 void Screen::DrawFins(const Anchor *anchor) const {
-    Uint32 color = 0xffcc9066;
+    uint color = 0xffcc9066;
     int fin_segments = 4;
     float fin_angle = M_PI * 0.7f;
     float fin_radius = anchor->radius * 0.6f;

@@ -18,7 +18,9 @@ SpatialHash::SpatialHash(int num_fish, int grid_size, Vector2 screen_size) : num
 }
 
 SpatialHash::~SpatialHash() {
-    for (Fish *fish : fishes) delete fish;
+    for (Fish *fish : fishes) {
+        delete fish;
+    }
 
     fishes.clear();
     spatial_list.clear();

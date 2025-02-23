@@ -186,7 +186,6 @@ float Fish::CalcAnchorRadius(const int anchor_index) {
 
     // x-value where the fish radius decreases at a decreasing rate
     float tapering_x = (1 + sqrt(2)) / 2;
-    std::cout << anchor_index << "\n";
 
     float radius;
     if (fish_pos_x <= tapering_x) {
